@@ -1,12 +1,14 @@
 {
   "errors": {
-    "invalid-option": "invalid option \n please enter a valid option!"
+    "invalid-option": "invalid option\nplease enter a valid option!"
   },
   "first-run": {
     "welcome": "hi welcome to taskpy!",
-    "ask-name": "how should i call you?\n ==> ",
-    "ask-cheer": "Do you want to set motivational messages to cheer yourself while interacting with the app? \n Type 1 for yes \n Type 0 for no \n ==> ",
-    "tell-max-phrases": "okay! you can set 20 phrases as max! this will be displayed randomly",
-    "ask-cheers": "type here your phrases use ',' to separate them \n ==> "
+    "ask-name": "how should i call you?\n==> ",
+    "ask-cheer": "Do you want to set motivational messages to cheer yourself while interacting with the app? (y/n)\n==> ",
+    "tell-max-phrases": "okay! you can as set many as u want! this phrases will be displayed randomly",
+    "ask-cheers": "type here your phrases use ',' followed by a space to separate them\n example: 'you can!, i can!, i'm the best!\n==> ",
+    "no-cheers": "ok, you won't see any cheer phrases\nyou can add them later if you want!",
+    "confirm-cheers": "confirm your cheers (y/n)\n==> "
   }
 }

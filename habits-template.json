@@ -1,0 +1,35 @@
+{
+  "water": {
+    "tracker-unit": {
+      "liters": "",
+      "glasses": ""
+    },
+    "enabled": ""
+  },
+  "weight": {
+    "enabled": ""
+  },
+  "exercise": {
+    "tracker-unit": {
+      "binary": "",
+      "time": ""
+    },
+    "enabled": ""
+  },
+  "meditation": {
+    "enabled": ""
+  },
+  "study": {
+    "enabled": ""
+  },
+  "reading": {
+    "tracker-unit": {
+      "time": "",
+      "pages": ""
+    },
+    "enable": ""
+  },
+  "mod": {
+    "enabled": ""
+  }
+}
