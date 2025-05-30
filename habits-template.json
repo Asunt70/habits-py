@@ -2,34 +2,34 @@
   "water": {
     "tracker-unit": {
       "liters": "",
-      "glasses": ""
+      "glasses": "yes"
     },
-    "enabled": ""
+    "enabled": "yes"
   },
   "weight": {
-    "enabled": ""
+    "enabled": "yes"
   },
   "exercise": {
     "tracker-unit": {
       "binary": "",
-      "time": ""
+      "time": "yes"
     },
-    "enabled": ""
+    "enabled": "yes"
   },
   "meditation": {
-    "enabled": ""
+    "enabled": "yes"
   },
   "study": {
-    "enabled": ""
+    "enabled": "yes"
   },
   "reading": {
     "tracker-unit": {
-      "time": "",
+      "time": "yes",
       "pages": ""
     },
-    "enable": ""
+    "enabled": "yes"
   },
   "mod": {
-    "enabled": ""
+    "enabled": "yes"
   }
 }

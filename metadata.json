@@ -10,5 +10,8 @@
     "ask-cheers": "type here your phrases use ',' followed by a space to separate them\n example: 'you can!, i can!, i'm the best!\n==> ",
     "no-cheers": "ok, you won't see any cheer phrases\nyou can add them later if you want!",
     "confirm-cheers": "confirm your cheers (y/n)\n==> "
+  },
+  "choose-habits": {
+    "query": "We have the following pre-built habits:\n1. water\n2. weight\n3. exercise\n4. meditation\n5. reading\n6. studying\n7. mod\nEnter 0 to select all, Enter 9 to skip and create your own\n==> "
   }
 }

@@ -1,3 +1,12 @@
+import json 
 from first_run import main as first
-#add ability to re run first run which will delete everythong and make the proccess again
-first()
+
+with open('config.json') as f:
+    config = json.load(f)
+
+first_run_flag = config['first-run']
+
+if first_run_flag == 'false':
+    first()
+else: 
+    print('welcome again!')

@@ -7,3 +7,5 @@ studying = time /seccions
 reading = time / pages read
 studying = time
 mod = 😡 😤 😟 😕 😐 🙂 😊 😁 🤩 🥰 😎
+
+#add weekly habits
