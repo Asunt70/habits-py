@@ -1,6 +1,7 @@
 lab.py
 lab.json
 habits.txt
+config.json
 __pycache__/
 .ropeproject/
 user/

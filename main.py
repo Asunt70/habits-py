@@ -8,5 +8,6 @@ first_run_flag = config['first-run']
 
 if first_run_flag == 'false':
     first()
-else: 
-    print('welcome again!')
+
+print('welcome!')
+ 
