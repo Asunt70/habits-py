@@ -9,4 +9,4 @@
  - Custom Habits
  - Several units of tracking: Want to track exercise in minutes? **YES** or in yes / no responses? **ALSO YES**
  - Simple analize data: with analize 'habit' you will be able to see complex graphs to see how it's your progress
- - Export CSV: You can export all you data whenever you want as a CSV FILE, to see it in (EXCEL / SHEETS)
+ - Export CSV: You can export all you data whenever you want as a CSV FILE, to see it in (EXCEL / SHEETS /ETC)
