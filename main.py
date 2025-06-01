@@ -1,13 +1,31 @@
-import json 
-from first_run import main as first
+import json
+from first_run import main as first_run
+from track_habits import main as track_habits
+from functions import int_input
 
-with open('config.json') as f:
-    config = json.load(f)
+def load_metadata():
+    with open('metadata.json','r') as f:
+        return json.load(f)
 
-first_run_flag = config['first-run']
+meta = load_metadata()
+m_menu = meta['menus']['principal']
 
-if first_run_flag == 'false':
-    first()
+def load_config():
+    with open('config.json') as f:
+        return json.load(f)
 
-print('welcome!')
- 
+def main():
+    config = load_config()
+    if config['first-run'] == 'false':
+        first_run()
+    print('hi')
+    while True:
+        selected_option = int_input(m_menu)
+        if selected_option == 1:
+            track_habits()
+            continue
+        else:
+            break
+    
+
+main()

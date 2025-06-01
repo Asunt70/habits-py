@@ -13,5 +13,8 @@
   },
   "choose-habits": {
     "query": "We have the following pre-built habits:\n1. water\n2. weight\n3. exercise\n4. meditation\n5. reading\n6. studying\n7. mod\nEnter 0 to select all, Enter 9 to skip and create your own\n==> "
+  },
+  "menus": {
+    "principal": "MENU\n------------\ntrack daily habits (1)\ncreate new habit (2)\nexport csv (3)\nsee habit graphs (4)\nexit (0)\n==> "
   }
 }

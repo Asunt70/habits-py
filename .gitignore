@@ -2,6 +2,8 @@ lab.py
 lab.json
 habits.txt
 config.json
-__pycache__/
+
 .ropeproject/
 user/
+__pycache__/
+__pycache__/first_run.cpython-313.pyc
