@@ -1,13 +1,25 @@
 import sqlite3
 import json
-import pandas as pd
+import os
 from functions import yes_no_prompt, multi_int_input
 
+user_folder_path = 'user'
+if not os.path.exists('user'):
+    os.makedirs(user_folder_path)
+    
 #update first_run_flag
 path_config = 'config.json'
-with open(path_config, 'r') as f:
-     config = json.load(f)
+config_dict = {
+    'first_run': 'false'
+}
 
+with open(path_config, 'w') as f:
+    json.dump(config_dict,f)
+
+def load_config():
+    with open(path_config, 'r') as f:
+        return(json.load(f))
+    
 #metadata
 def load_metadata():
     with open('metadata.json', 'r') as f:
@@ -70,7 +82,8 @@ def choose_habits():
 def main():
    user_name = str(input(m_ask_name))
    user_cheers = create_cheers()
-   user_cheers_string = ",".join(user_cheers)
+   if not user_cheers is None:
+       user_cheers = ",".join(user_cheers)
    choose_habits()
    user_habits_string = ",".join(user_habits)
 
@@ -86,13 +99,14 @@ def main():
             ''')
         cursor.execute(
                 "INSERT INTO user_data (name, cheers, habits) VALUES (?, ?, ?)",
-                (user_name, user_cheers_string, user_habits_string,)
+                (user_name, user_cheers, user_habits_string,)
             )
         conn.commit()
 
    except sqlite3.Error as e:
         print(f"Database error: {e}")
 
-   config['first-run'] = 'true'
+   config = load_config()
+   config['first_run'] = 'true'
    with open(path_config, 'w') as f:
       json.dump(config,f,indent=4)

@@ -17,7 +17,7 @@ def load_config():
 
 def main():
     config = load_config()
-    if config['first-run'] == 'false':
+    if config['first_run'] == 'false':
         first_run()
     while True:
         selected_option = int_input(m_menu)
