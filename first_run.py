@@ -96,6 +96,9 @@ def main():
                 cheers TEXT,
                 habits TEXT
                 );
+                CREATE TABLE IF NOT EXISTS habits (
+                date TEXT
+                );
             ''')
         cursor.execute(
                 "INSERT INTO user_data (name, cheers, habits) VALUES (?, ?, ?)",
