@@ -6,4 +6,4 @@ config.json
 .ropeproject/
 user/
 __pycache__/
-__pycache__/first_run.cpython-313.pyc
+.venv/

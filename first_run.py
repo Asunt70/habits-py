@@ -9,12 +9,12 @@ if not os.path.exists('user'):
     
 #update first_run_flag
 path_config = 'config.json'
-config_dict = {
-    'first_run': 'false'
-}
-
-with open(path_config, 'w') as f:
-    json.dump(config_dict,f)
+if not os.path.exists(path_config):
+    config_dict = {
+        'first_run': 'false'
+}   
+    with open(path_config, 'w') as f:
+        json.dump(config_dict,f)
 
 def load_config():
     with open(path_config, 'r') as f:
