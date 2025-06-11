@@ -2,6 +2,7 @@ import json
 from first_run import main as first_run
 from track_habits import main as track_habits
 from create_habit import main as create_habit
+from reset import main as reset
 from functions import int_input
 
 def load_metadata():
@@ -26,6 +27,9 @@ def main():
             continue
         if selected_option == 2:
             create_habit()
+            continue
+        if selected_option == 5:
+            reset()
             continue
         else:
             break
