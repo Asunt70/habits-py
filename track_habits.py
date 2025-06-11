@@ -45,7 +45,7 @@ def delete_record():
             conn.commit()
         print(f"deleted record succesfully")
     except sqlite3.Error as e:
-        print(f"Database Errro: {e}")
+        print(f"Database Error: {e}")
 
 
 # get the today record
@@ -67,7 +67,7 @@ def get_last_record():
     try:
         with sqlite3.connect(database=database_path) as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM Table ORDER BY ID DESC LIMIT 1")
+            cursor.execute("SELECT * FROM habits ORDER BY ID DESC LIMIT 1")
             return cursor.fetchall()
     except sqlite3.Error as e:
         print(f"Database Erro: {e}")
@@ -125,7 +125,7 @@ def track():
 def main():
     check_cols()
     record = get_record()
-    print(f"today record: {record}")
+    print(f"got record is: {record}")
     # there's no track data today
     if record == []:
         track()
@@ -136,12 +136,32 @@ def main():
         for i in range(len(record)):
             if record[i] is None:
                 none_list.append(i)
+        # none_list has none values
         if len(none_list) > 0:
-            print(f"theres none values which are: {none_list}")
             cols.clear()
             get_cols()
-            print(cols)
+            none_cols = []
+            # get cols names where there's none values
             for i in none_list:
                 print(f"{cols[i]} has a none value")
+                none_cols.append(cols[i])
+            # update none records
+            for col in none_cols:
+                value = int_input(f"{col} is none please enter value for today\n==> ")
+                try:
+                    with sqlite3.connect(
+                        database=database_path, detect_types=sqlite3.PARSE_DECLTYPES
+                    ) as conn:
+                        cursor = conn.cursor()
+                        today = datetime.date.today()
+                        cursor.execute(
+                            f"UPDATE habits SET {col} = ? WHERE date = ?",
+                            (value, today),
+                        )
+                        conn.commit()
+                    print(f"{col} UPDATED")
+                except sqlite3.Error as e:
+                    print(f"Database Error: {e}")
+        # all cols are tracked
         else:
             print("everything is tracked")
