@@ -11,4 +11,4 @@ sqlite3.register_converter(
 )
 
 # Enable converters when connecting
-conn = sqlite3.connect("user_data.db", detect_types=sqlite3.PARSE_DECLTYPES)
+conn = sqlite3.connect("user/user_data.db", detect_types=sqlite3.PARSE_DECLTYPES)

@@ -1,5 +1,6 @@
-import sqlite3
+import sqlite3, datetime
 from functions import int_input
+import date_adapter  # noqa: F401  # <- Tells linters to chill
 
 database_path = "user/user_data.db"
 cols = []  # declaring empty list for get_cols()
@@ -39,7 +40,8 @@ def delete_record():
     try:
         with sqlite3.connect(database=database_path) as conn:
             cursor = conn.cursor()
-            cursor.execute("DELETE FROM habits WHERE date = CURRENT_DATE;")
+            today = datetime.date.today()
+            cursor.execute("DELETE FROM habits WHERE date = ?;", (today,))
             conn.commit()
         print(f"deleted record succesfully")
     except sqlite3.Error as e:
@@ -49,36 +51,26 @@ def delete_record():
 # get the today record
 def get_record():
     try:
-        with sqlite3.connect(database=database_path) as conn:
+        with sqlite3.connect(
+            database=database_path, detect_types=sqlite3.PARSE_DECLTYPES
+        ) as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT * from habits WHERE date = CURRENT_DATE;")
+            today = datetime.date.today()
+            cursor.execute("SELECT * from habits WHERE date = ?", (today,))
             return cursor.fetchall()
     except sqlite3.Error as e:
         print(f"Database Error: {e}")
 
 
-# track today data if there's no data today
-def track():
-    cols.clear()
-    get_cols()
-    cols.pop(0)
-    columns = ",".join(cols)
-    columns = "date," + columns
-    data = []
-    for col in cols:
-        raw = int_input(f"insert data for {col}\n==>")
-        data.append(raw)
+# lab function
+def get_last_record():
     try:
         with sqlite3.connect(database=database_path) as conn:
             cursor = conn.cursor()
-            data.insert(0, sqlite3.datetime.datetime.now().date())
-            cursor.execute(
-                f"INSERT INTO habits ({columns}) VALUES ({', '.join(['?' for _ in data])})",
-                data,
-            )
-        print("Data INSERTED")
+            cursor.execute("SELECT * FROM Table ORDER BY ID DESC LIMIT 1")
+            return cursor.fetchall()
     except sqlite3.Error as e:
-        print(f"Database error: {e}")
+        print(f"Database Erro: {e}")
 
 
 def check_cols():
@@ -106,6 +98,30 @@ def check_cols():
         print("all cols are SYNCHRONYZED")
 
 
+# track today data if there's no data today
+def track():
+    cols.clear()
+    get_cols()
+    del cols[:2]
+    columns = ",".join(cols)
+    columns = "date," + columns
+    data = []
+    for col in cols:
+        raw = int_input(f"insert data for {col}\n==>")
+        data.append(raw)
+    try:
+        with sqlite3.connect(database=database_path) as conn:
+            cursor = conn.cursor()
+            data.insert(0, datetime.date.today())
+            cursor.execute(
+                f"INSERT INTO habits ({columns}) VALUES ({', '.join(['?' for _ in data])})",
+                data,
+            )
+        print("Data INSERTED")
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+
+
 def main():
     check_cols()
     record = get_record()
@@ -126,9 +142,6 @@ def main():
             get_cols()
             print(cols)
             for i in none_list:
-                print(f"{cols[i]} has a none value in {i}")
+                print(f"{cols[i]} has a none value")
         else:
             print("everything is tracked")
-
-
-main()

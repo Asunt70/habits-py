@@ -1,6 +1,4 @@
-import sqlite3
-import json
-import os
+import sqlite3, json, os
 from functions import yes_no_prompt, multi_int_input
 
 user_folder_path = "user"
@@ -110,7 +108,8 @@ def main():
                 habits TEXT
                 );
                 CREATE TABLE IF NOT EXISTS habits (
-                date UNIQUE
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                date DATE UNIQUE
                 );
             """
             )
