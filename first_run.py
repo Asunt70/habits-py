@@ -55,7 +55,7 @@ user_habits = []
 
 def choose_habits():
     chosen_habits = multi_int_input(f"{m_choose_habits}")
-    habits_template = [
+    habits_template = (
         "water",
         "weight",
         "exercise",
@@ -63,7 +63,7 @@ def choose_habits():
         "study",
         "reading",
         "mod",
-    ]
+    )
     habit_map = {
         1: "water",
         2: "weight",
