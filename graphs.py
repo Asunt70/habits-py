@@ -1,13 +1,19 @@
+"""
+This module provides utility functions for database manipulation.
+"""
+
+import sqlite3
+import os
+import webbrowser
+import pandas as pd
+import matplotlib.pyplot as plt
 from track_habits import get_cols
 from functions import int_input
-import sqlite3, os, webbrowser
-import matplotlib.pyplot as plt
-import pandas as pd
+from config import DATABASE_PATH
 
 cols = get_cols()
-database_path = "user/user_data.db"
 try:
-    with sqlite3.connect(database=database_path) as conn:
+    with sqlite3.connect(database=DATABASE_PATH) as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT * from habits")
         results = cursor.fetchall()
@@ -21,17 +27,19 @@ print(x)
 df.plot(x="date", y=["weight"], kind="bar", title="Graph", figsize=(18, 10))
 plt.axhline(y=x, color="gray", label="Average")
 plt.savefig("myfig.png")
-file = "myfig.png"
-webbrowser.open("file://" + os.path.abspath(file))
+FILE = "myfig.png"
+webbrowser.open("file://" + os.path.abspath(FILE))
 
 df = df.to_string(index=False)
 
 
 def average():
+    """calculate the average of all the habits"""
     print("average")
 
 
 def habit_graph():
+    """simple menu to see habit graphs"""
     # selected menu in habit graph menu
     sel_menu = int_input("1. Week\n2. Month\n3. Year")
     if sel_menu == 1:
@@ -45,6 +53,7 @@ def habit_graph():
 
 
 def main():
+    """main function"""
     # selected 1st menu
     sel_menu = int_input("1. Habit Graph\n2. Average\n==> ")
     if sel_menu == 1:
@@ -54,4 +63,3 @@ def main():
 
 
 main()
-# ignore

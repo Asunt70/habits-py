@@ -1,29 +1,33 @@
+"""#todo"""
+
+# try to put load functions in functions.py
 import sqlite3
 import json
 import os
 from functions import yes_no_prompt, multi_int_input
+from config import CONFIG_PATH, METADATA_PATH, USER_FOLDER_PATH
 
-user_folder_path = "user"
-if not os.path.exists("user"):
-    os.makedirs(user_folder_path)
+if not os.path.exists(USER_FOLDER_PATH):
+    os.makedirs(USER_FOLDER_PATH)
 
 # update first_run_flag
-path_config = "config.json"
-if not os.path.exists(path_config):
+if not os.path.exists(CONFIG_PATH):
     config_dict = {"first_run": "false"}
-    with open(path_config, "w") as f:
+    with open(CONFIG_PATH, "w", encoding="utf-8") as f:
         json.dump(config_dict, f)
 
 
 def load_config():
-    with open(path_config, "r") as f:
-        return json.load(f)
+    """loads config.json"""
+    with open(CONFIG_PATH, "r", encoding="utf-8") as config_file:
+        return json.load(config_file)
 
 
 # metadata
 def load_metadata():
-    with open("metadata.json", "r") as f:
-        return json.load(f)
+    """loads metadata"""
+    with open(METADATA_PATH, "r", encoding="utf-8") as meta_file:
+        return json.load(meta_file)
 
 
 meta = load_metadata()
@@ -38,6 +42,7 @@ m_confirm_cheers = meta["first_run"]["confirm_cheers"]
 
 
 def create_cheers():
+    """#todo"""
     while True:
         ask_cheer = yes_no_prompt(f"{m_ask_cheer}")
         if "y" in ask_cheer:
@@ -45,17 +50,16 @@ def create_cheers():
             confirm_cheers = yes_no_prompt(f"{m_confirm_cheers}")
             if "y" in confirm_cheers:
                 return get_cheers.split(", ")
-            else:
-                print("Okay, we will re-run previous commands!")
-        else:
-            print(f"{m_no_cheers}")
-            return
+            print("Okay, we will re-run previous commands!")
+            continue
+        return print(f"{m_no_cheers}")
 
 
 user_habits = []
 
 
 def choose_habits():
+    """#todo"""
     chosen_habits = multi_int_input(f"{m_choose_habits}")
     habits_template = (
         "water",
@@ -92,6 +96,7 @@ def choose_habits():
 
 
 def main():
+    """main function"""
     user_name = str(input(m_ask_name))
     user_cheers = create_cheers()
     if not user_cheers is None:
@@ -130,5 +135,5 @@ def main():
 
     config = load_config()
     config["first_run"] = "true"
-    with open(path_config, "w") as f:
-        json.dump(config, f, indent=4)
+    with open(CONFIG_PATH, "w", encoding="utf-8") as config_file:
+        json.dump(config, config_file, indent=4)

@@ -1,4 +1,7 @@
-import sqlite3, datetime
+"""date adapter for database"""
+
+import sqlite3
+import datetime
 
 # Adapter for date/datetime → SQLite
 sqlite3.register_adapter(datetime.date, lambda d: d.isoformat())

@@ -1,15 +1,19 @@
-import sqlite3, datetime
-from functions import int_input
-import date_adapter  # noqa: F401  # <- Tells linters to chill
+"""track habits"""
 
-database_path = "user/user_data.db"
+import sqlite3
+import datetime
+import date_adapter  # noqa: F401  # <- Tells linters to chill
+from functions import int_input, get_habits
+from config import DATABASE_PATH
+
 cols = []  # declaring empty list for get_cols()
 
 
 # get the cols from the database
 def get_cols():
+    """get cols from database returns a list"""
     try:
-        with sqlite3.connect(database=database_path) as conn:
+        with sqlite3.connect(database=DATABASE_PATH) as conn:
             cursor = conn.cursor()
             data = cursor.execute(
                 """
@@ -21,38 +25,29 @@ def get_cols():
             return cols
     except sqlite3.Error as e:
         print(f"Database error: {e}")
-
-
-# get habits col from user_data table
-def get_habits():
-    try:
-        with sqlite3.connect(database=database_path) as conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT habits FROM user_data")
-            return cursor.fetchall()
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-        return []
+        return None
 
 
 # delete the today record
 def delete_record():
+    """delete the last record TESTING ONLY"""
     try:
-        with sqlite3.connect(database=database_path) as conn:
+        with sqlite3.connect(database=DATABASE_PATH) as conn:
             cursor = conn.cursor()
             today = datetime.date.today()
             cursor.execute("DELETE FROM habits WHERE date = ?;", (today,))
             conn.commit()
-        print(f"deleted record succesfully")
+        print("deleted record succesfully")
     except sqlite3.Error as e:
         print(f"Database Error: {e}")
 
 
 # get the today record
 def get_record():
+    """gets today record returns a tuple"""
     try:
         with sqlite3.connect(
-            database=database_path, detect_types=sqlite3.PARSE_DECLTYPES
+            database=DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES
         ) as conn:
             cursor = conn.cursor()
             today = datetime.date.today()
@@ -60,20 +55,24 @@ def get_record():
             return cursor.fetchall()
     except sqlite3.Error as e:
         print(f"Database Error: {e}")
+        return None
 
 
 # lab function
 def get_last_record():
+    """gets last record returns a tuple"""
     try:
-        with sqlite3.connect(database=database_path) as conn:
+        with sqlite3.connect(database=DATABASE_PATH) as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM habits ORDER BY ID DESC LIMIT 1")
             return cursor.fetchall()
     except sqlite3.Error as e:
         print(f"Database Erro: {e}")
+        return None
 
 
 def check_cols():
+    "check if there are differences between the habit table and the user_data table and updates it"
     # past code
     # cols.clear()
     # get_cols()
@@ -87,7 +86,7 @@ def check_cols():
 
     if diff:
         try:
-            with sqlite3.connect(database=database_path) as conn:
+            with sqlite3.connect(database=DATABASE_PATH) as conn:
                 cursor = conn.cursor()
                 for i in diff:
                     cursor.execute(f"ALTER TABLE habits ADD COLUMN {i} INTEGER;")
@@ -98,8 +97,8 @@ def check_cols():
         print("all cols are SYNCHRONYZED")
 
 
-# track today data if there's no data today
 def track():
+    """track today data if there's no data today"""
     cols.clear()
     get_cols()
     del cols[:2]
@@ -110,7 +109,7 @@ def track():
         raw = int_input(f"insert data for {col}\n==>")
         data.append(raw)
     try:
-        with sqlite3.connect(database=database_path) as conn:
+        with sqlite3.connect(database=DATABASE_PATH) as conn:
             cursor = conn.cursor()
             data.insert(0, datetime.date.today())
             cursor.execute(
@@ -123,6 +122,7 @@ def track():
 
 
 def main():
+    """main function"""
     check_cols()
     record = get_record()
     print(f"got record is: {record}")
@@ -133,8 +133,8 @@ def main():
     else:
         record = list(record[0])
         none_list = []
-        for i in range(len(record)):
-            if record[i] is None:
+        for i, rec in enumerate(record):
+            if rec is None:
                 none_list.append(i)
         # none_list has none values
         if len(none_list) > 0:
@@ -150,7 +150,7 @@ def main():
                 value = int_input(f"{col} is none please enter value for today\n==> ")
                 try:
                     with sqlite3.connect(
-                        database=database_path, detect_types=sqlite3.PARSE_DECLTYPES
+                        database=DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES
                     ) as conn:
                         cursor = conn.cursor()
                         today = datetime.date.today()
