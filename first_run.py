@@ -1,4 +1,6 @@
-import sqlite3, json, os
+import sqlite3
+import json
+import os
 from functions import yes_no_prompt, multi_int_input
 
 user_folder_path = "user"
