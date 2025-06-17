@@ -73,12 +73,7 @@ def get_last_record():
 
 def check_cols():
     "check if there are differences between the habit table and the user_data table and updates it"
-    # past code
-    # cols.clear()
-    # get_cols()
-    # new code
     get_cols()
-    # print(cols)
     res = get_habits()
     unf_habits = ",".join(res[0])
     habits = unf_habits.split(",")
@@ -93,8 +88,8 @@ def check_cols():
             print(f"sync {diff} cols, DONE")
         except sqlite3.Error as e:
             print(f"DatabaseError: {e}")
-    else:
-        print("all cols are SYNCHRONYZED")
+    # else:
+    #     print("all cols are SYNCHRONYZED")
 
 
 def track():
@@ -116,7 +111,7 @@ def track():
                 f"INSERT INTO habits ({columns}) VALUES ({', '.join(['?' for _ in data])})",
                 data,
             )
-        print("Data INSERTED")
+        print("done")
     except sqlite3.Error as e:
         print(f"Database error: {e}")
 
@@ -125,7 +120,7 @@ def main():
     """main function"""
     check_cols()
     record = get_record()
-    print(f"got record is: {record}")
+    # print(f"got record is: {record}")
     # there's no track data today
     if record == []:
         track()

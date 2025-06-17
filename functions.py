@@ -14,12 +14,15 @@ def yes_no_prompt(prompt):
             print("please enter 'y' for yes or 'n' for no")
 
 
-def int_input(prompt):
+def int_input(prompt, stop: int | None = None):
     """An int input, only accepts integers"""
     while True:
         try:
-            user_input = int(input(prompt))
-            return user_input
+            num = int(input(prompt))
+            if stop is not None and num not in range(1, stop):
+                print("enter valid number")
+                continue
+            return num
         except ValueError:
             print("please enter a number")
 
