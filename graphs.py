@@ -113,6 +113,7 @@ def draw_week(df, habit, num):
 
 
 def user_input(param):
+    "gets int input"
     for i, col in enumerate(param, start=1):
         print(f"{i}. {col}")
     sel_option = int_input("==> ", len(param) + 1)
@@ -132,6 +133,27 @@ def week_graph():
 
 
 def load_month():
+    "loads the available months from the year"
+    try:
+        with sqlite3.connect(database=DATABASE_PATH) as conn:
+            cur = conn.cursor()
+            cur.execute(
+                """
+                SELECT DISTINCT strftime('%m', date) as month
+                FROM habits
+                WHERE strftime('%Y', date) = strftime('%Y', 'now')
+                ORDER BY month DESC
+                """
+            )
+            response = cur.fetchall()
+            return response
+    except sqlite3.Error as e:
+        print(f"Database Error {e}")
+        return None
+
+
+def get_month(month):
+    """get data from month"""
     try:
         with sqlite3.connect(database=DATABASE_PATH) as conn:
             cur = conn.cursor()
@@ -145,27 +167,47 @@ def load_month():
             """,
                 (cur_year, month),
             )
+            res = cur.fetchall()
+            col_names = [desc[0] for desc in cur.description]
+            return col_names, res
     except sqlite3.Error as e:
         print(f"Database Error {e}")
+        return None
 
 
-def select_month(month):
-    """get data from year"""
-    try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
-            cur = conn.cursor()
-            cur_year = datetime.now().strftime("%Y")
-            cur.execute(
-                """
-                SELECT *
-                FROM habits
-                WHERE strftime('%Y', date) = ? AND strftime('%m', date) = ?
-                ORDER BY date;
-            """,
-                (cur_year, month),
-            )
-    except sqlite3.Error as e:
-        print(f"Database Error {e}")
+def month_graph():
+    """intended to show a graph of the selected month"""
+    response = load_month()
+    if response == [] or response is None:
+        print("empty months try with another")
+        return
+    months = []
+    for tp in response:
+        months.append(tp[0])
+    print("select option")
+    dates = {
+        "01": "January",
+        "02": "February",
+        "03": "March",
+        "04": "April",
+        "05": "May",
+        "06": "June",
+        "07": "July",
+        "08": "August",
+        "09": "September",
+        "10": "October",
+        "11": "November",
+        "12": "December",
+    }
+    for i, month in enumerate(months, start=1):
+        print(f"{i}. {dates.get(month)}")
+    sel_month = int_input("=> ", stop=len(months) + 1)
+    cols, res = get_month(months[sel_month - 1])
+    df = pd.DataFrame(res)
+    df.columns = cols
+    habits = cols[2:]
+    habit_to_graph = user_input(habits)
+    print(df)
 
 
 def load_years():
@@ -226,8 +268,8 @@ def year_graph():
     df = pd.DataFrame(res)
     df.columns = cols
     habits = cols[2:]
-    habit_to_track = user_input(habits)
-    draw_year(df, habit_to_track)
+    habit_to_graph = user_input(habits)
+    draw_year(df, habit_to_graph)
 
 
 def habit_graph():
@@ -254,4 +296,4 @@ def main():
         habits_average()
 
 
-year_graph()
+month_graph()

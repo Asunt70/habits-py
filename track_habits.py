@@ -1,5 +1,6 @@
 """track habits"""
 
+# ALLOW FLOAT
 import sqlite3
 import datetime
 import date_adapter  # noqa: F401  # <- Tells linters to chill
