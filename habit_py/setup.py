@@ -1,20 +1,13 @@
 """#todo"""
 
-# try to put load functions in functions.py
 import sqlite3
 import json
 import os
-from functions import yes_no_prompt, multi_int_input
-from config import CONFIG_PATH, METADATA_PATH, USER_FOLDER_PATH
+from habit_py.utils.functions import yes_no_prompt, multi_int_input
+from config.config import CONFIG_PATH, USER_FOLDER_PATH
 
 if not os.path.exists(USER_FOLDER_PATH):
     os.makedirs(USER_FOLDER_PATH)
-
-# update first_run_flag
-if not os.path.exists(CONFIG_PATH):
-    config_dict = {"first_run": "false"}
-    with open(CONFIG_PATH, "w", encoding="utf-8") as f:
-        json.dump(config_dict, f)
 
 
 def load_config():
@@ -23,44 +16,35 @@ def load_config():
         return json.load(config_file)
 
 
-# metadata
-def load_metadata():
-    """loads metadata"""
-    with open(METADATA_PATH, "r", encoding="utf-8") as meta_file:
-        return json.load(meta_file)
-
-
-meta = load_metadata()
-m_choose_habits = meta["choose_habits"]
-m_welcome = meta["first_run"]["welcome"]
-m_ask_name = meta["first_run"]["ask_name"]
-m_ask_cheer = meta["first_run"]["ask_cheer"]
-m_get_cheers = meta["first_run"]["ask_cheers"]
-m_invalid_option = meta["errors"]["invalid_option"]
-m_no_cheers = meta["first_run"]["no_cheers"]
-m_confirm_cheers = meta["first_run"]["confirm_cheers"]
-
-
 def create_cheers():
-    """#todo"""
+    """create motivational messages for the user"""
     while True:
-        ask_cheer = yes_no_prompt(f"{m_ask_cheer}")
+        ask_cheer = yes_no_prompt(
+            "Do you want to set motivational messages to cheer you while interacting with the app? (y/n)\n=> ",
+        )
         if "y" in ask_cheer:
-            get_cheers = str(input(f"{m_get_cheers}"))
-            confirm_cheers = yes_no_prompt(f"{m_confirm_cheers}")
+            get_cheers = str(
+                input(
+                    "use ',' followed by a SPACE to separate them\n example: you can!, i can!, i'm the best!\n=>"
+                )
+            )
+            confirm_cheers = yes_no_prompt(
+                f"are you sure to create {get_cheers}? (y/n)\n=> "
+            )
             if "y" in confirm_cheers:
                 return get_cheers.split(", ")
             print("Okay, we will re-run previous commands!")
             continue
-        return print(f"{m_no_cheers}")
+        return print(
+            "there won't be any cheers\nyou can add them later with 'habitpy setup cheers'"
+        )
 
 
 user_habits = []
 
 
 def choose_habits():
-    """#todo"""
-    chosen_habits = multi_int_input(f"{m_choose_habits}")
+    """choose habits for the user"""
     habits_template = (
         "water",
         "weight",
@@ -79,6 +63,12 @@ def choose_habits():
         6: "study",
         7: "mod",
     }
+    print("You can choose habits from the following list template:")
+    for i, habit_template in enumerate(habits_template, start=1):
+        print(f"{i}: {habit_template}")
+    print("0: all of them\n9: skip")
+    chosen_habits = multi_int_input("=> ")
+
     for choice in chosen_habits:
         if choice == 0:
             print("all selected")
@@ -88,7 +78,9 @@ def choose_habits():
             user_habits.append(key)
 
         elif choice == 9:
-            break
+            print(
+                "skipped; REMEMBER to create your habits later with 'habitpy create habit_name'"
+            )
 
         else:
             print("please enter a correct value")
@@ -97,7 +89,7 @@ def choose_habits():
 
 def main():
     """main function"""
-    user_name = str(input(m_ask_name))
+    user_name = str(input("How should i call you?\n=> "))
     user_cheers = create_cheers()
     if not user_cheers is None:
         user_cheers = ",".join(user_cheers)

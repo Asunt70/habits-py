@@ -9,9 +9,9 @@ from datetime import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from track_habits import get_cols
-from functions import int_input
-from config import DATABASE_PATH
+from habit_py.track import get_cols
+from habit_py.utils.functions import int_input
+from config.config import DATABASE_PATH
 
 cols2 = get_cols()
 
