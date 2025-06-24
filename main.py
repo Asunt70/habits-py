@@ -2,10 +2,16 @@
 
 import json
 import argparse
-from habit_py.setup import main as setup
-from habit_py.track import main as track_habits
-from habit_py.create_habit import main as create_habit
-from habit_py.reset import main as reset
+
+# import webbrowser
+# import uvicorn
+# import time
+# import run_api
+from setup import main as setup
+from track import main as track_habits
+from create_habit import main as create_habit
+from graphs import month_data, year_data, week_data
+from reset import main as reset
 from config.config import CONFIG_PATH
 
 
@@ -24,12 +30,20 @@ reset_parser = subparsers.add_parser(
     "reset", help="Resets the habit tracker, WARNING: All data will be lost"
 )
 graph_parser = subparsers.add_parser("graph", help="Graph the habits ")
-graph_parser.add_argument(
-    choices=["lastweek", "week", "month", "year"],
-    type=str,
-    dest="graph_type",
-    help="Type of graph to display",
+graph_parser = graph_parser.add_subparsers(dest="data_format", required=True)
+week_graph = graph_parser.add_parser(
+    "week", help="Graph habits from current week or last week"
 )
+month_graph = graph_parser.add_parser("month", help="Graph habits from specific month")
+year_graph = graph_parser.add_parser("year", help="Graph habits from specific year")
+week_graph.add_argument(
+    choices=["current", "last"],
+    dest="last_or_current",
+    type=str,
+    help="Select current or last week",
+)
+month_graph.add_argument("month_name", type=str, help="Select a month to graph")
+year_graph.add_argument("year", type=int, help="Select a year to graph")
 args = parser.parse_args()
 
 
@@ -49,6 +63,14 @@ def main():
     if args.command == "create":
         create_habit(args.habit_name)
         return
+    if args.command == "graph":
+        if args.data_format == "week":
+            week_data()
+        if args.data_format == "month":
+            month_data(args.month_name)
+            return
+        if args.data_format == "year":
+            year_data(args.year)
 
 
 if __name__ == "__main__":

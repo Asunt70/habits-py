@@ -3,14 +3,11 @@ This module provides utility functions for database manipulation.
 """
 
 import sqlite3
-import os
-import webbrowser
 from datetime import datetime
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
-from habit_py.track import get_cols
-from habit_py.utils.functions import int_input
+from track import get_cols
+from utils.functions import int_input
 from config.config import DATABASE_PATH
 
 cols2 = get_cols()
@@ -94,22 +91,7 @@ def load_week(param):
             return cols, response
     except sqlite3.Error as e:
         print(f"Database Error as {e}")
-
-
-def draw_week(df, habit, num):
-    """draws the week graph"""
-    if num == 1:
-        title_txt = "This Week"
-    else:
-        title_txt = "Last Week"
-    df.plot(x="day_name", y=[habit], kind="bar", title=title_txt, figsize=(5, 8))
-    x = df[habit].mean()
-    plt.axhline(y=x, color="gray", label="Average", linestyle="--")
-    plt.xticks(rotation=0, ha="center")
-    plt.xlabel("")
-    FILE = "assets/myfig.png"
-    plt.savefig(FILE)
-    webbrowser.open("file://" + os.path.abspath(FILE))
+        return None
 
 
 def user_input(param):
@@ -120,16 +102,15 @@ def user_input(param):
     return param[sel_option - 1]
 
 
-def week_graph():
+def week_data():
     """simple menu to see week graphs"""
     last_or_current = int_input(prompt="1. Current Week\n2. Last Week\n => ", stop=3)
-    cols, res = load_week(last_or_current)
-    df = pd.DataFrame(res)
+    cols, response = load_week(last_or_current)
+    if response == [] or response is None:
+        return
+    df = pd.DataFrame(response)
     df.columns = cols
-    habits = cols[2:]
-
-    habit_to_track = user_input(habits)
-    draw_week(df, habit_to_track, last_or_current)
+    return df
 
 
 def load_month():
@@ -175,7 +156,8 @@ def get_month(month):
         return None
 
 
-def month_graph():
+# args list months etc.
+def month_data(month_to_get):
     """intended to show a graph of the selected month"""
     response = load_month()
     if response == [] or response is None:
@@ -184,30 +166,31 @@ def month_graph():
     months = []
     for tp in response:
         months.append(tp[0])
-    print("select option")
     dates = {
-        "01": "January",
-        "02": "February",
-        "03": "March",
-        "04": "April",
-        "05": "May",
-        "06": "June",
-        "07": "July",
-        "08": "August",
-        "09": "September",
-        "10": "October",
-        "11": "November",
-        "12": "December",
+        "January": "01",
+        "February": "02",
+        "March": "03",
+        "April": "04",
+        "May": "05",
+        "June": "06",
+        "July": "07",
+        "August": "08",
+        "September": "09",
+        "October": "10",
+        "November": "11",
+        "December": "12",
     }
-    for i, month in enumerate(months, start=1):
-        print(f"{i}. {dates.get(month)}")
-    sel_month = int_input("=> ", stop=len(months) + 1)
-    cols, res = get_month(months[sel_month - 1])
-    df = pd.DataFrame(res)
-    df.columns = cols
-    habits = cols[2:]
-    habit_to_graph = user_input(habits)
-    print(df)
+    month_to_get = month_to_get.capitalize()
+    formatted_month = dates.get(month_to_get)
+    if formatted_month in months:
+        cols, res = get_month(formatted_month)
+        df = pd.DataFrame(res)
+        df.columns = cols
+        return df
+    print("please enter a correct month")
+
+
+# print(month_data("june"))
 
 
 def load_years():
@@ -224,9 +207,11 @@ def load_years():
             return res
     except sqlite3.Error as e:
         print(f"Database Error {e}")
+        return None
 
 
-def select_year(year):
+def get_year_data(year):
+    """gets all the specified data from habits"""
     try:
         with sqlite3.connect(database=DATABASE_PATH) as conn:
             cur = conn.cursor()
@@ -240,60 +225,36 @@ def select_year(year):
         print(f"Database Error {e}")
 
 
-def draw_year(dataframe, habit):
-    """BETAAAA"""
-    dataframe.plot(x="date", y=[habit], kind="scatter", title=2, figsize=(5, 8))
-    x = dataframe[habit].mean()
-    plt.axhline(y=x, color="gray", label="Average", linestyle="--")
-    plt.xticks(rotation=0, ha="center")
-    plt.xlabel("")
-    FILE = "assets/myfig.png"
-    plt.savefig(FILE)
-    webbrowser.open("file://" + os.path.abspath(FILE))
-
-
-def year_graph():
+def year_data(year_to_get):
+    """returns data from the year"""
     response = load_years()
+    if response == [] or response is None:
+        print("empty months try with another")
+        return
     years = []
     for tp in response:
         years.append(tp[0])
-    print("Select option")
-    for i, year in enumerate(years, start=1):
-        print(f"{i}. {year}")
-    got_year = int_input("=> ", stop=len(years) + 1)
-    cols, res = select_year(years[got_year - 1])
+    # print("Select option")
+    # for i, year in enumerate(years, start=1):
+    #     print(f"{i}. {year}")
+    # got_year = int_input("=> ", stop=len(years) + 1)
+    cols, res = get_year_data(year_to_get)
     if res == []:
         print("empty year try with another")
         return
     df = pd.DataFrame(res)
     df.columns = cols
-    habits = cols[2:]
-    habit_to_graph = user_input(habits)
-    draw_year(df, habit_to_graph)
+    return df
 
 
-def habit_graph():
-    """simple menu to see habit graphs"""
-    # selected menu in habit graph menu
-    sel_menu = int_input("1. Week\n2. Month\n3. Year\n==> ")
-    if sel_menu == 1:
-        week_graph()
-    elif sel_menu == 2:
-        print("month")
-    elif sel_menu == 3:
-        load_years()
-    else:
-        print("please enter a valid option")
-
-
-def main():
-    """main function"""
-    # selected 1st menu
-    sel_menu = int_input("1. Habit Graph\n2. Average\n==> ")
-    if sel_menu == 1:
-        habit_graph()
-    if sel_menu == 2:
-        habits_average()
-
-
-month_graph()
+# def main(graph_type):
+#     """main function for graphing habits"""
+#     if graph_type == "week":
+#         return week_graph()
+#     elif graph_type == "month":
+#         return month_graph()
+#     elif graph_type == "year":
+#         return year_graph(year_to_graph)
+#     else:
+#         print("please enter a valid option")
+#         return

@@ -56,6 +56,9 @@ def multi_int_input(prompt):
         for i in user_input_list:
             if not i:
                 continue
+            if len(i) >= 2:
+                print("enter valid numbers from 0-9 separated by space")
+                break
             try:
                 valid_integers.append(int(i))
             except ValueError:

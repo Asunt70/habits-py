@@ -3,7 +3,7 @@
 import sqlite3
 import json
 import os
-from habit_py.utils.functions import yes_no_prompt, multi_int_input
+from utils.functions import yes_no_prompt, multi_int_input
 from config.config import CONFIG_PATH, USER_FOLDER_PATH
 
 if not os.path.exists(USER_FOLDER_PATH):
@@ -67,24 +67,28 @@ def choose_habits():
     for i, habit_template in enumerate(habits_template, start=1):
         print(f"{i}: {habit_template}")
     print("0: all of them\n9: skip")
-    chosen_habits = multi_int_input("=> ")
 
-    for choice in chosen_habits:
-        if choice == 0:
-            print("all selected")
-            user_habits.extend(habits_template)
-        elif choice in habit_map:
-            key = habit_map[choice]
-            user_habits.append(key)
-
-        elif choice == 9:
-            print(
-                "skipped; REMEMBER to create your habits later with 'habitpy create habit_name'"
-            )
-
-        else:
-            print("please enter a correct value")
-            break
+    while True:
+        chosen_habits = multi_int_input("=> ")
+        for choice in chosen_habits:
+            if choice == 0:
+                print("All habits template selected")
+                return user_habits.extend(habits_template)
+            if choice in habit_map:
+                key = habit_map[choice]
+                if key in user_habits:
+                    print(
+                        f"Option: '{key}' already selected please enter valid options"
+                    )
+                    continue
+                user_habits.append(key)
+                if len(user_habits) == len(chosen_habits):
+                    return user_habits
+            elif choice == 9:
+                print(
+                    "skipped; REMEMBER to create your habits later with 'habitpy create habit_name'"
+                )
+                return
 
 
 def main():

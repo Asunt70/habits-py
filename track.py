@@ -3,8 +3,8 @@
 # ALLOW FLOAT
 import sqlite3
 import datetime
-import habit_py.utils.date_adapter as date_adapter  # noqa: F401  # <- Tells linters to chill
-from habit_py.utils.functions import float_input, get_habits, get_record
+import utils.date_adapter as date_adapter  # noqa: F401  # <- Tells linters to chill
+from utils.functions import float_input, get_habits, get_record
 from config.config import DATABASE_PATH
 
 cols = []  # declaring empty list for get_cols()
