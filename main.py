@@ -65,7 +65,7 @@ def main():
         return
     if args.command == "graph":
         if args.data_format == "week":
-            week_data()
+            week_data(args.last_or-current)
         if args.data_format == "month":
             month_data(args.month_name)
             return
