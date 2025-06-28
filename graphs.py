@@ -96,6 +96,7 @@ def load_week(param):
 
 def user_input(param):
     "gets int input"
+    print("Select an option")
     for i, col in enumerate(param, start=1):
         print(f"{i}. {col}")
     sel_option = int_input("==> ", len(param) + 1)
@@ -113,27 +114,7 @@ def week_data():
     return df
 
 
-def load_month():
-    "loads the available months from the year"
-    try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
-            cur = conn.cursor()
-            cur.execute(
-                """
-                SELECT DISTINCT strftime('%m', date) as month
-                FROM habits
-                WHERE strftime('%Y', date) = strftime('%Y', 'now')
-                ORDER BY month DESC
-                """
-            )
-            response = cur.fetchall()
-            return response
-    except sqlite3.Error as e:
-        print(f"Database Error {e}")
-        return None
-
-
-def get_month(month):
+def load_month(month):
     """get data from month"""
     try:
         with sqlite3.connect(database=DATABASE_PATH) as conn:
@@ -156,41 +137,50 @@ def get_month(month):
         return None
 
 
+def get_month_data(habit: str, month: str):
+    try:
+        with sqlite3.connect(database=DATABASE_PATH) as conn:
+            cur = conn.cursor()
+            cur_year = datetime.now().strftime("%Y")
+            cur.execute(
+                f"""SELECT date,{habit} FROM habits  WHERE strftime('%Y', date) = ? AND strftime('%m', date) = ?
+                ORDER BY date;""",
+                (cur_year, month),
+            )
+            res = cur.fetchall()
+            return res
+    except sqlite3.Error as e:
+        print(f"Database Error {e}")
+
+
 # args list months etc.
-def month_data(month_to_get):
+def month_data(month_to_get: str):
     """intended to show a graph of the selected month"""
-    response = load_month()
-    if response == [] or response is None:
-        print("empty months try with another")
-        return
-    months = []
-    for tp in response:
-        months.append(tp[0])
     dates = {
-        "January": "01",
-        "February": "02",
-        "March": "03",
-        "April": "04",
-        "May": "05",
-        "June": "06",
-        "July": "07",
-        "August": "08",
-        "September": "09",
-        "October": "10",
-        "November": "11",
-        "December": "12",
+        "january": "01",
+        "february": "02",
+        "march": "03",
+        "april": "04",
+        "may": "05",
+        "june": "06",
+        "july": "07",
+        "august": "08",
+        "september": "09",
+        "october": "10",
+        "november": "11",
+        "december": "12",
     }
-    month_to_get = month_to_get.capitalize()
     formatted_month = dates.get(month_to_get)
-    if formatted_month in months:
-        cols, res = get_month(formatted_month)
-        df = pd.DataFrame(res)
-        df.columns = cols
-        return df
-    print("please enter a correct month")
-
-
-# print(month_data("june"))
+    cols, response = load_month(formatted_month)
+    if response is None or response == []:
+        print("no data for specified month")
+        return
+    habits = cols[2:]
+    habit_to_track = user_input(habits)
+    data = get_month_data(habit_to_track, formatted_month)
+    df = pd.DataFrame(data)
+    df.columns = ["Date", habit_to_track]
+    return df
 
 
 def load_years():
