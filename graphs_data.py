@@ -5,50 +5,60 @@ This module provides utility functions for database manipulation.
 import sqlite3
 from datetime import datetime
 import pandas as pd
-import numpy as np
-from track import get_cols
+
+# import numpy as np/
+# from track import get_cols
 from utils.functions import int_input
 from config.config import DATABASE_PATH
 
-cols2 = get_cols()
+# cols2 = get_cols()
 
 
-def smart_num(x):
-    """converts num into int if possible, else float"""
-    if x == int(x):  # if x has no decimal part
-        return int(x)
-    return float(x)
+# def smart_num(x):
+#     """converts num into int if possible, else float"""
+#     if x == int(x):  # if x has no decimal part
+#         return int(x)
+#     return float(x)
 
 
-def habits_average():
-    """calculate the average of all the habits"""
-    response = []
+# def habits_average():
+#     """calculate the average of all the habits"""
+#     response = []
 
-    try:
-        for col in cols2[2:]:
-            with sqlite3.connect(database=DATABASE_PATH) as conn:
-                cursor = conn.cursor()
-                cursor.execute(f"SELECT {col} from habits")
-                res = cursor.fetchall()
-                response.append(res)
-    except sqlite3.Error as e:
-        print(f"Database Error {e}")
-    formatted_response = [
-        [item for tup in sublist for item in tup] for sublist in response
-    ]
-    nums = []
-    for i in formatted_response:
-        i = np.mean(i)
-        nums.append(smart_num(i))
-    average_dict = dict(zip(cols2[2:], nums))
+#     try:
+#         for col in cols2[2:]:
+#             with sqlite3.connect(database=DATABASE_PATH) as conn:
+#                 cursor = conn.cursor()
+#                 cursor.execute(f"SELECT {col} from habits")
+#                 res = cursor.fetchall()
+#                 response.append(res)
+#     except sqlite3.Error as e:
+#         print(f"Database Error {e}")
+#     formatted_response = [
+#         [item for tup in sublist for item in tup] for sublist in response
+#     ]
+#     nums = []
+#     for i in formatted_response:
+#         i = np.mean(i)
+#         nums.append(smart_num(i))
+#     average_dict = dict(zip(cols2[2:], nums))
 
-    for i, (key, value) in enumerate(average_dict.items(), start=1):
-        print(f"{i}. {key}: {value}")
+#     for i, (key, value) in enumerate(average_dict.items(), start=1):
+#         print(f"{i}. {key}: {value}")
+
+
+def user_input(param):
+    "gets int input"
+    print("Select an option")
+    for i, col in enumerate(param, start=1):
+        print(f"{i}. {col}")
+    sel_option = int_input("==> ", len(param) + 1)
+    return param[sel_option - 1]
 
 
 def load_week(param):
     """load week data from database"""
-    if param == 1:
+    if param == "current":
         param = """
                 SELECT
                     CASE strftime('%u', date)
@@ -94,28 +104,71 @@ def load_week(param):
         return None
 
 
-def user_input(param):
-    "gets int input"
-    print("Select an option")
-    for i, col in enumerate(param, start=1):
-        print(f"{i}. {col}")
-    sel_option = int_input("==> ", len(param) + 1)
-    return param[sel_option - 1]
+def get_week_data(habit, param):
+    """load week data from database"""
+    if param == "current":
+        param = f"""
+                SELECT
+                    CASE strftime('%u', date)
+                        WHEN '1' THEN 'Monday'
+                        WHEN '2' THEN 'Tuesday'
+                        WHEN '3' THEN 'Wednesday'
+                        WHEN '4' THEN 'Thursday'
+                        WHEN '5' THEN 'Friday'
+                        WHEN '6' THEN 'Saturday'
+                        WHEN '7' THEN 'Sunday'
+                    END AS day_name,
+                {habit}
+                FROM habits
+                WHERE date >= date('now', 'weekday 0', '-6 days')
+                AND date <= date('now', 'weekday 0');
+            """
+    else:
+        param = f"""
+                SELECT
+                    CASE strftime('%u', date)
+                        WHEN '1' THEN 'Monday'
+                        WHEN '2' THEN 'Tuesday'
+                        WHEN '3' THEN 'Wednesday'
+                        WHEN '4' THEN 'Thursday'
+                        WHEN '5' THEN 'Friday'
+                        WHEN '6' THEN 'Saturday'
+                        WHEN '7' THEN 'Sunday'
+                    END AS day_name,
+                {habit}
+                FROM habits
+                WHERE date >= date('now', 'weekday 0', '-13 days')
+                AND date <= date('now', 'weekday 0', '-7 days');
+            """
+    try:
+        with sqlite3.connect(database=DATABASE_PATH) as conn:
+            cur = conn.cursor()
+            cur.execute(param)
+            response = cur.fetchall()
+            return response
+    except sqlite3.Error as e:
+        print(f"Database Error as {e}")
+        return None
 
 
-def week_data():
+def week_data(last_or_current: str):
     """simple menu to see week graphs"""
-    last_or_current = int_input(prompt="1. Current Week\n2. Last Week\n => ", stop=3)
     cols, response = load_week(last_or_current)
     if response == [] or response is None:
-        return
-    df = pd.DataFrame(response)
-    df.columns = cols
+        return None
+    habits = cols[3:]
+    habit_to_track = user_input(habits)
+    data = get_week_data(habit_to_track, last_or_current)
+    if data is None:
+        print("An error has occured... please try again")
+        return None
+    df = pd.DataFrame(data)
+    df.columns = ("day", habit_to_track)
     return df
 
 
 def load_month(month):
-    """get data from month"""
+    """loads the available habits for the specified month"""
     try:
         with sqlite3.connect(database=DATABASE_PATH) as conn:
             cur = conn.cursor()
@@ -138,12 +191,14 @@ def load_month(month):
 
 
 def get_month_data(habit: str, month: str):
+    """get the month data for the specified habit"""
     try:
         with sqlite3.connect(database=DATABASE_PATH) as conn:
             cur = conn.cursor()
             cur_year = datetime.now().strftime("%Y")
             cur.execute(
-                f"""SELECT date,{habit} FROM habits  WHERE strftime('%Y', date) = ? AND strftime('%m', date) = ?
+                f"""SELECT date,{habit} FROM habits
+                WHERE strftime('%Y', date) = ? AND strftime('%m', date) = ?
                 ORDER BY date;""",
                 (cur_year, month),
             )
@@ -151,6 +206,7 @@ def get_month_data(habit: str, month: str):
             return res
     except sqlite3.Error as e:
         print(f"Database Error {e}")
+        return None
 
 
 # args list months etc.
@@ -174,66 +230,65 @@ def month_data(month_to_get: str):
     cols, response = load_month(formatted_month)
     if response is None or response == []:
         print("no data for specified month")
-        return
+        return None
     habits = cols[2:]
     habit_to_track = user_input(habits)
     data = get_month_data(habit_to_track, formatted_month)
+    if data is None:
+        print("An error occurred... please try again")
+        return None
     df = pd.DataFrame(data)
-    df.columns = ["Date", habit_to_track]
+    df.columns = ["date", habit_to_track]
     return df
 
 
-def load_years():
-    """loads year"""
-    try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
-            cur = conn.cursor()
-            query = """SELECT DISTINCT substr(date, 1, 4) AS year
-                        FROM habits
-                        ORDER BY year DESC;"""
-            cur.execute(query)
-            res = cur.fetchall()
-
-            return res
-    except sqlite3.Error as e:
-        print(f"Database Error {e}")
-        return None
-
-
-def get_year_data(year):
-    """gets all the specified data from habits"""
+def load_year(year):
+    """gets all the data from the specified year"""
     try:
         with sqlite3.connect(database=DATABASE_PATH) as conn:
             cur = conn.cursor()
             cur.execute(
-                "SELECT * FROM habits WHERE strftime('%Y', date) = ?;", (str(year),)
+                "SELECT * FROM habits WHERE strftime('%Y', date) = ?;",
+                (str(year),),
             )
             res = cur.fetchall()
             col_names = [desc[0] for desc in cur.description]
             return col_names, res
     except sqlite3.Error as e:
         print(f"Database Error {e}")
+        return None
 
 
-def year_data(year_to_get):
+def get_year_data(habit, year):
+    """gets all the data for the specified habit in the specified year"""
+    try:
+        with sqlite3.connect(database=DATABASE_PATH) as conn:
+            cur = conn.cursor()
+            cur.execute(
+                f"SELECT date,{habit} FROM habits WHERE strftime('%Y', date) = ?;",
+                (str(year),),
+            )
+            res = cur.fetchall()
+            return res
+    except sqlite3.Error as e:
+        print(f"Database Error {e}")
+        return None
+
+
+def year_data(year: int):
     """returns data from the year"""
-    response = load_years()
+    cols, response = load_year(year)
     if response == [] or response is None:
-        print("empty months try with another")
-        return
-    years = []
-    for tp in response:
-        years.append(tp[0])
-    # print("Select option")
-    # for i, year in enumerate(years, start=1):
-    #     print(f"{i}. {year}")
-    # got_year = int_input("=> ", stop=len(years) + 1)
-    cols, res = get_year_data(year_to_get)
-    if res == []:
-        print("empty year try with another")
-        return
-    df = pd.DataFrame(res)
-    df.columns = cols
+        print("there's no data in the database for this year")
+        return None
+    habits = cols[2:]
+    habit_to_track = user_input(habits)
+    data = get_year_data(habit_to_track, year)
+    if data is None:
+        print("An error occurred... please try again")
+        return None
+    df = pd.DataFrame(data)
+    df.columns = ["date", habit_to_track]
     return df
 
 

@@ -10,7 +10,7 @@ import argparse
 from setup import main as setup
 from track import main as track_habits
 from create_habit import main as create_habit
-from graphs import month_data, year_data, week_data
+from graphs_data import month_data, year_data, week_data
 from reset import main as reset
 from config.config import CONFIG_PATH
 
@@ -38,11 +38,29 @@ month_graph = graph_parser.add_parser("month", help="Graph habits from specific 
 year_graph = graph_parser.add_parser("year", help="Graph habits from specific year")
 week_graph.add_argument(
     choices=["current", "last"],
-    dest="last_or_current",
+    dest="week_option",
     type=str,
     help="Select current or last week",
 )
-month_graph.add_argument("month_name", type=str, help="Select a month to graph")
+month_graph.add_argument(
+    choices=[
+        "january",
+        "february",
+        "march",
+        "april",
+        "may",
+        "june",
+        "july",
+        "august",
+        "september",
+        "october",
+        "november",
+        "december",
+    ],
+    dest="month_name",
+    type=str,
+    help="Select a month to graph",
+)
 year_graph.add_argument("year", type=int, help="Select a year to graph")
 args = parser.parse_args()
 
@@ -65,7 +83,7 @@ def main():
         return
     if args.command == "graph":
         if args.data_format == "week":
-            week_data(args.last_or-current)
+            week_data(args.week_option)
         if args.data_format == "month":
             month_data(args.month_name)
             return
