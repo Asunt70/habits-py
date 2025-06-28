@@ -5,11 +5,13 @@ This module provides utility functions for database manipulation.
 import sqlite3
 from datetime import datetime
 import pandas as pd
+import uvicorn
 
 # import numpy as np/
 # from track import get_cols
 from utils.functions import int_input
 from config.config import DATABASE_PATH
+from api import push_data
 
 # cols2 = get_cols()
 
@@ -165,6 +167,17 @@ def week_data(last_or_current: str):
     df = pd.DataFrame(data)
     df.columns = ("day", habit_to_track)
     return df
+
+
+def week_send(pam: str):
+    data2 = week_data(pam)
+    if week_data is None:
+        return None
+    push_data(data2)
+    uvicorn.run("api:app", host="127.0.0.1", port=8000, reload=False)
+
+
+week_send("current")
 
 
 def load_month(month):
