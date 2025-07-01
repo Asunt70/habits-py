@@ -7,6 +7,7 @@ from setup import main as setup
 from track import main as track_habits
 from create_habit import main as create_habit
 from graphs_data import month_data, year_data, week_data
+from export import main as export_habits
 from reset import main as reset
 from config.config import CONFIG_PATH
 
@@ -58,6 +59,7 @@ month_graph.add_argument(
     help="Select a month to graph",
 )
 year_graph.add_argument("year", type=int, help="Select a year to graph")
+export_parser = subparsers.add_parser("export", help="Export habits to a CSV file")
 args = parser.parse_args()
 
 
@@ -69,22 +71,20 @@ def main():
         # add a get started message
     if args.command == "track":
         track_habits()
-        return
     if args.command == "reset":
         reset()
         print("please re-run habitpy setup")
-        return
     if args.command == "create":
         create_habit(args.habit_name)
-        return
     if args.command == "graph":
         if args.data_format == "week":
             week_data(args.week_option)
         if args.data_format == "month":
             month_data(args.month_name)
-            return
         if args.data_format == "year":
             year_data(args.year)
+    if args.command == "export":
+        export_habits()
 
 
 if __name__ == "__main__":

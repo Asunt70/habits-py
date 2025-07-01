@@ -1,48 +1,13 @@
 """
-This module provides utility functions for database manipulation.
+This module provides graphing functionality for habit tracking data.
 """
 
-import sqlite3
+import sqlite3 as db
 from datetime import datetime
 import pandas as pd
 import plotly.graph_objects as go
 from utils.functions import int_input
 from config.config import DATABASE_PATH
-
-# cols2 = get_cols()
-
-
-# def smart_num(x):
-#     """converts num into int if possible, else float"""
-#     if x == int(x):  # if x has no decimal part
-#         return int(x)
-#     return float(x)
-
-
-# def habits_average():
-#     """calculate the average of all the habits"""
-#     response = []
-
-#     try:
-#         for col in cols2[2:]:
-#             with sqlite3.connect(database=DATABASE_PATH) as conn:
-#                 cursor = conn.cursor()
-#                 cursor.execute(f"SELECT {col} from habits")
-#                 res = cursor.fetchall()
-#                 response.append(res)
-#     except sqlite3.Error as e:
-#         print(f"Database Error {e}")
-#     formatted_response = [
-#         [item for tup in sublist for item in tup] for sublist in response
-#     ]
-#     nums = []
-#     for i in formatted_response:
-#         i = np.mean(i)
-#         nums.append(smart_num(i))
-#     average_dict = dict(zip(cols2[2:], nums))
-
-#     for i, (key, value) in enumerate(average_dict.items(), start=1):
-#         print(f"{i}. {key}: {value}")
 
 
 def user_input(param):
@@ -91,13 +56,13 @@ def load_week(param):
                 AND date <= date('now', 'weekday 0', '-7 days');
             """
     try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
+        with db.connect(database=DATABASE_PATH) as conn:
             cur = conn.cursor()
             cur.execute(param)
             cols = [desc[0] for desc in cur.description]
             response = cur.fetchall()
             return cols, response
-    except sqlite3.Error as e:
+    except db.Error as e:
         print(f"Database Error as {e}")
         return None
 
@@ -139,12 +104,12 @@ def get_week_data(habit, param):
                 AND date <= date('now', 'weekday 0', '-7 days');
             """
     try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
+        with db.connect(database=DATABASE_PATH) as conn:
             cur = conn.cursor()
             cur.execute(param)
             response = cur.fetchall()
             return response
-    except sqlite3.Error as e:
+    except db.Error as e:
         print(f"Database Error as {e}")
         return None
 
@@ -195,7 +160,7 @@ def week_data(last_or_current: str):
 def load_month(month):
     """loads the available habits for the specified month"""
     try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
+        with db.connect(database=DATABASE_PATH) as conn:
             cur = conn.cursor()
             cur_year = datetime.now().strftime("%Y")
             cur.execute(
@@ -210,7 +175,7 @@ def load_month(month):
             res = cur.fetchall()
             col_names = [desc[0] for desc in cur.description]
             return col_names, res
-    except sqlite3.Error as e:
+    except db.Error as e:
         print(f"Database Error {e}")
         return None
 
@@ -218,7 +183,7 @@ def load_month(month):
 def get_month_data(habit: str, month: str):
     """get the month data for the specified habit"""
     try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
+        with db.connect(database=DATABASE_PATH) as conn:
             cur = conn.cursor()
             cur_year = datetime.now().strftime("%Y")
             cur.execute(
@@ -229,7 +194,7 @@ def get_month_data(habit: str, month: str):
             )
             res = cur.fetchall()
             return res
-    except sqlite3.Error as e:
+    except db.Error as e:
         print(f"Database Error {e}")
         return None
 
@@ -293,7 +258,7 @@ def month_data(month_to_get: str):
 def load_year(year):
     """gets all the data from the specified year"""
     try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
+        with db.connect(database=DATABASE_PATH) as conn:
             cur = conn.cursor()
             cur.execute(
                 "SELECT * FROM habits WHERE strftime('%Y', date) = ?;",
@@ -302,7 +267,7 @@ def load_year(year):
             res = cur.fetchall()
             col_names = [desc[0] for desc in cur.description]
             return col_names, res
-    except sqlite3.Error as e:
+    except db.Error as e:
         print(f"Database Error {e}")
         return None
 
@@ -310,7 +275,7 @@ def load_year(year):
 def get_year_data(habit, year):
     """gets all the data for the specified habit in the specified year"""
     try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
+        with db.connect(database=DATABASE_PATH) as conn:
             cur = conn.cursor()
             cur.execute(
                 f"SELECT date,{habit} FROM habits WHERE strftime('%Y', date) = ?;",
@@ -318,7 +283,7 @@ def get_year_data(habit, year):
             )
             res = cur.fetchall()
             return res
-    except sqlite3.Error as e:
+    except db.Error as e:
         print(f"Database Error {e}")
         return None
 
@@ -361,16 +326,3 @@ def year_data(year: int):
         yref="y",
     )
     fig.show()
-
-
-# def main(graph_type):
-#     """main function for graphing habits"""
-#     if graph_type == "week":
-#         return week_graph()
-#     elif graph_type == "month":
-#         return month_graph()
-#     elif graph_type == "year":
-#         return year_graph(year_to_graph)
-#     else:
-#         print("please enter a valid option")
-#         return
