@@ -6,8 +6,8 @@ import sqlite3 as db
 from datetime import datetime
 import pandas as pd
 import plotly.graph_objects as go
-from utils.functions import int_input
-from config.config import DATABASE_PATH
+from habitpy.utils.functions import int_input
+from habitpy.config.config import DATABASE_PATH
 
 
 # if habits length is less than 2 not display select option

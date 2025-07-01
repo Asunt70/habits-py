@@ -3,8 +3,8 @@
 import sqlite3 as db
 import json
 import os
-from utils.functions import yes_no_prompt, multi_int_input
-from config.config import CONFIG_PATH, USER_FOLDER_PATH
+from habitpy.utils.functions import yes_no_prompt, multi_int_input
+from habitpy.config.config import CONFIG_PATH, USER_FOLDER_PATH
 
 
 def load_config():

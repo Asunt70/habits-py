@@ -2,7 +2,7 @@
 
 import sqlite3 as db
 import datetime
-from config.config import DATABASE_PATH
+from habitpy.config.config import DATABASE_PATH
 
 
 def yes_no_prompt(prompt):

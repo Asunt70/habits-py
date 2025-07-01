@@ -3,10 +3,10 @@
 # ALLOW FLOAT
 import sqlite3 as db
 import datetime
-import utils.date_adapter as date_adapter
-from utils.functions import float_input, get_habits, get_record
-from utils.cheers import main as cheers
-from config.config import DATABASE_PATH
+import habitpy.utils.date_adapter as date_adapter
+from habitpy.utils.functions import float_input, get_habits, get_record
+from habitpy.utils.cheers import main as cheers
+from habitpy.config.config import DATABASE_PATH
 
 
 cols = []

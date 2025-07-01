@@ -1,15 +1,14 @@
 """main wrapper"""
 
-import json
 import argparse
 import os
-from setup import main as setup
-from track import main as track_habits
-from create_habit import main as create_habit
-from graphs_data import month_data, year_data, week_data
-from export import main as export_habits
-from reset import main as reset
-from config.config import CONFIG_PATH
+from habitpy.setup import main as setup
+from habitpy.track import main as track_habits
+from habitpy.create_habit import main as create_habit
+from habitpy.graphs_data import month_data, year_data, week_data
+from habitpy.export import main as export_habits
+from habitpy.reset import main as reset
+from habitpy.config.config import CONFIG_PATH
 
 parser = argparse.ArgumentParser(description="Habit Tracker CLI")
 subparsers = parser.add_subparsers(dest="command")

@@ -2,7 +2,7 @@
 
 import sqlite3 as db
 import csv
-from config.config import DATABASE_PATH
+from habitpy.config.config import DATABASE_PATH
 
 
 # Run your query, the result is stored as `data`

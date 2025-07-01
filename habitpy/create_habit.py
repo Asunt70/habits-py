@@ -1,8 +1,8 @@
 """adds a habit to habits column in user_data table"""
 
 import sqlite3 as db
-from utils.functions import yes_no_prompt, get_habits
-from config.config import DATABASE_PATH
+from habitpy.utils.functions import yes_no_prompt, get_habits
+from habitpy.config.config import DATABASE_PATH
 
 
 def main(habit):

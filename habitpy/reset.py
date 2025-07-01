@@ -1,9 +1,9 @@
 """reset config.json and deletes database"""
 
 import os
-from config.config import CONFIG_PATH, DATABASE_PATH
-from utils.functions import yes_no_prompt
-from export import main as export_habits
+from habitpy.config.config import CONFIG_PATH, DATABASE_PATH
+from habitpy.utils.functions import yes_no_prompt
+from habitpy.export import main as export_habits
 
 
 def main():

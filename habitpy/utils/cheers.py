@@ -1,7 +1,9 @@
+"""Returns a cheer to display while tracking habits"""
+
 import json
 import sqlite3 as db
 import random
-from config.config import CONFIG_PATH, DATABASE_PATH
+from habitpy.config.config import CONFIG_PATH, DATABASE_PATH
 
 
 def load_config():
