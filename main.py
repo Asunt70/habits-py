@@ -11,13 +11,6 @@ from export import main as export_habits
 from reset import main as reset
 from config.config import CONFIG_PATH
 
-
-def load_config():
-    """loads config.json"""
-    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
 parser = argparse.ArgumentParser(description="Habit Tracker CLI")
 subparsers = parser.add_subparsers(dest="command")
 create_parser = subparsers.add_parser("create", help="Create a new habit")
