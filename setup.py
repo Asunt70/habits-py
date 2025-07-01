@@ -26,7 +26,7 @@ def create_cheers():
                 )
             )
             confirm_cheers = yes_no_prompt(
-                f"are you sure to create {get_cheers}? (y/n)\n=> "
+                f"are you sure to create ({get_cheers})? (y/n)\n=> "
             )
             if "y" in confirm_cheers:
                 return get_cheers.split(", ")
