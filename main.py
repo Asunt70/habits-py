@@ -3,10 +3,6 @@
 import json
 import argparse
 
-# import webbrowser
-# import uvicorn
-# import time
-# import run_api
 from setup import main as setup
 from track import main as track_habits
 from create_habit import main as create_habit

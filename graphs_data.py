@@ -5,13 +5,9 @@ This module provides utility functions for database manipulation.
 import sqlite3
 from datetime import datetime
 import pandas as pd
-import uvicorn
-
-# import numpy as np/
-# from track import get_cols
+import plotly.graph_objects as go
 from utils.functions import int_input
 from config.config import DATABASE_PATH
-from api import push_data
 
 # cols2 = get_cols()
 
@@ -119,7 +115,7 @@ def get_week_data(habit, param):
                         WHEN '5' THEN 'Friday'
                         WHEN '6' THEN 'Saturday'
                         WHEN '7' THEN 'Sunday'
-                    END AS day_name,
+                    END AS Day,
                 {habit}
                 FROM habits
                 WHERE date >= date('now', 'weekday 0', '-6 days')
@@ -136,7 +132,7 @@ def get_week_data(habit, param):
                         WHEN '5' THEN 'Friday'
                         WHEN '6' THEN 'Saturday'
                         WHEN '7' THEN 'Sunday'
-                    END AS day_name,
+                    END AS Day,
                 {habit}
                 FROM habits
                 WHERE date >= date('now', 'weekday 0', '-13 days')
@@ -165,19 +161,35 @@ def week_data(last_or_current: str):
         print("An error has occured... please try again")
         return None
     df = pd.DataFrame(data)
-    df.columns = ("day", habit_to_track)
-    return df
-
-
-def week_send(pam: str):
-    data2 = week_data(pam)
-    if week_data is None:
-        return None
-    push_data(data2)
-    uvicorn.run("api:app", host="127.0.0.1", port=8000, reload=False)
-
-
-week_send("current")
+    df.columns = ("Day", habit_to_track)
+    avg = df[habit_to_track].mean()
+    fig = go.Figure(
+        data=[
+            go.Bar(
+                x=df["Day"],
+                y=df[habit_to_track],
+                marker_color="dodgerblue",
+            )
+        ],
+        layout=dict(barcornerradius=15),
+    )
+    fig.update_layout(template="plotly_dark")
+    fig.update_layout(title=f"{habit_to_track} for the {last_or_current} week")
+    fig.add_shape(
+        type="line",
+        x0=0,
+        x1=1,
+        y0=avg,
+        y1=avg,
+        line=dict(
+            color="lightgray",
+            width=2,
+            dash="dash",
+        ),
+        xref="paper",
+        yref="y",
+    )
+    fig.show()
 
 
 def load_month(month):
@@ -252,7 +264,30 @@ def month_data(month_to_get: str):
         return None
     df = pd.DataFrame(data)
     df.columns = ["date", habit_to_track]
-    return df
+    avg = df[habit_to_track].mean()
+    fig = go.Figure(
+        data=[
+            go.Scatter(x=df["date"], y=df[habit_to_track], marker_color="dodgerblue")
+        ],
+        layout=dict(barcornerradius=15),
+    )
+    fig.update_layout(template="plotly_dark")
+    fig.update_layout(title=f"{habit_to_track} for {month_to_get.capitalize()}")
+    fig.add_shape(
+        type="line",
+        x0=0,
+        x1=1,
+        y0=avg,
+        y1=avg,
+        line=dict(
+            color="lightgray",
+            width=2,
+            dash="dash",
+        ),
+        xref="paper",
+        yref="y",
+    )
+    fig.show()
 
 
 def load_year(year):
@@ -302,7 +337,30 @@ def year_data(year: int):
         return None
     df = pd.DataFrame(data)
     df.columns = ["date", habit_to_track]
-    return df
+    avg = df[habit_to_track].mean()
+    fig = go.Figure(
+        data=[
+            go.Scatter(x=df["date"], y=df[habit_to_track], marker_color="dodgerblue")
+        ],
+        layout=dict(barcornerradius=15),
+    )
+    fig.update_layout(template="plotly_dark")
+    fig.update_layout(title=f"{habit_to_track} for {year}")
+    fig.add_shape(
+        type="line",
+        x0=0,
+        x1=1,
+        y0=avg,
+        y1=avg,
+        line=dict(
+            color="lightgray",
+            width=2,
+            dash="dash",
+        ),
+        xref="paper",
+        yref="y",
+    )
+    fig.show()
 
 
 # def main(graph_type):
