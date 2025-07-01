@@ -3,11 +3,11 @@
 # ALLOW FLOAT
 import sqlite3
 import datetime
-import utils.date_adapter as date_adapter  # noqa: F401  # <- Tells linters to chill
+import utils.date_adapter as date_adapter
 from utils.functions import float_input, get_habits, get_record
 from config.config import DATABASE_PATH
 
-cols = []  # declaring empty list for get_cols()
+cols = []
 
 
 # get the cols from the database
@@ -31,7 +31,7 @@ def get_cols():
 
 
 def check_cols():
-    """check if there are differences between the habit table and the user_data table and updates it"""
+    """check if there are differences between the habit table and the user_data table"""
     get_cols()
     response = get_habits()
     raw_habits = ",".join(response[0])
@@ -44,11 +44,9 @@ def check_cols():
                 cursor = conn.cursor()
                 for i in missing_columns:
                     cursor.execute(f"ALTER TABLE habits ADD COLUMN {i} REAL")
-            print("syncing cols.... DONE")
+            # print("syncing cols.... DONE")
         except sqlite3.Error as e:
             print(f"DatabaseError: {e}")
-    # else:
-    #     print("all cols are SYNCHRONYZED")
 
 
 def track():
@@ -93,7 +91,6 @@ def main():
             none_cols = []
             # get cols names where there's none values
             for i in none_list:
-                print(f"{cols[i]} has a none value")
                 none_cols.append(cols[i])
             # update none records
             for col in none_cols:
@@ -112,6 +109,5 @@ def main():
                     print(f"{col} UPDATED")
                 except sqlite3.Error as e:
                     print(f"Database Error: {e}")
-        # all cols are tracked
         else:
-            print("everything is tracked")
+            print("everything's tracked")

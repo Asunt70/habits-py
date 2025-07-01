@@ -26,6 +26,6 @@ def main(habit):
                     (updated_response,),
                 )
                 conn.commit()
-                print(f"{habit} added successfully")
+                print(f"{habit} habit added successfully")
         except sqlite3.Error as e:
             print(f"Database error: {e}")
