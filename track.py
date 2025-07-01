@@ -5,7 +5,9 @@ import sqlite3 as db
 import datetime
 import utils.date_adapter as date_adapter
 from utils.functions import float_input, get_habits, get_record
+from utils.cheers import main as cheers
 from config.config import DATABASE_PATH
+
 
 cols = []
 
@@ -74,6 +76,7 @@ def track():
 
 def main():
     """main function"""
+    cheers()
     check_cols()
     record = get_record()
     if record is None or record == []:

@@ -33,5 +33,8 @@ def main():
             len_cheers = len(cheers)
             if len_cheers > 1:
                 ran_num = random.randint(0, len_cheers - 1)
-                return cheers[ran_num]
-            return cheers[0]
+                print(cheers[ran_num])
+                return
+            print(cheers[0])
+            return
+    return None
