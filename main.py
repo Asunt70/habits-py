@@ -2,7 +2,7 @@
 
 import json
 import argparse
-
+import os
 from setup import main as setup
 from track import main as track_habits
 from create_habit import main as create_habit
@@ -60,20 +60,19 @@ month_graph.add_argument(
 )
 year_graph.add_argument("year", type=int, help="Select a year to graph")
 export_parser = subparsers.add_parser("export", help="Export habits to a CSV file")
+setup_parser = subparsers.add_parser("setup", help="Setup the habit tracker")
 args = parser.parse_args()
 
 
 def main():
     """main function"""
-    config = load_config()
-    if config["first_run"] == "false":
-        setup()
-        # add a get started message
+    if not os.path.exists(CONFIG_PATH):
+        if args.command == "setup":
+            setup()
     if args.command == "track":
         track_habits()
     if args.command == "reset":
         reset()
-        print("please re-run habitpy setup")
     if args.command == "create":
         create_habit(args.habit_name)
     if args.command == "graph":

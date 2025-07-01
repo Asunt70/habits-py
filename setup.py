@@ -1,13 +1,10 @@
-"""#todo"""
+"""setup"""
 
 import sqlite3 as db
 import json
 import os
 from utils.functions import yes_no_prompt, multi_int_input
 from config.config import CONFIG_PATH, USER_FOLDER_PATH
-
-if not os.path.exists(USER_FOLDER_PATH):
-    os.makedirs(USER_FOLDER_PATH)
 
 
 def load_config():
@@ -35,9 +32,10 @@ def create_cheers():
                 return get_cheers.split(", ")
             print("Okay, we will re-run previous commands!")
             continue
-        return print(
+        print(
             "there won't be any cheers\nyou can add them later with 'habitpy setup cheers'"
         )
+        return None
 
 
 user_habits = []
@@ -93,10 +91,25 @@ def choose_habits():
 
 def main():
     """main function"""
+    if not os.path.exists(USER_FOLDER_PATH):
+        os.makedirs(USER_FOLDER_PATH)
+
+    if not os.path.exists(CONFIG_PATH):
+        with open(CONFIG_PATH, "w", encoding="utf-8") as config_file:
+            json.dump(
+                {"first_run": "true", "cheers": "false", "language": "en"},
+                config_file,
+                indent=4,
+            )
+
     user_name = str(input("How should i call you?\n=> "))
     user_cheers = create_cheers()
     if not user_cheers is None:
         user_cheers = ",".join(user_cheers)
+        config = load_config()
+        config["cheers"] = "true"
+        with open(CONFIG_PATH, "w", encoding="utf-8") as config_file:
+            json.dump(config, config_file, indent=4)
     choose_habits()
     user_habits_string = ",".join(user_habits)
 

@@ -12,4 +12,4 @@ db.register_converter("date", lambda b: datetime.date.fromisoformat(b.decode()))
 db.register_converter("datetime", lambda b: datetime.datetime.fromisoformat(b.decode()))
 
 # Enable converters when connecting
-conn = db.connect("user/user_data.db", detect_types=db.PARSE_DECLTYPES)
+# conn = db.connect(database=DATABASE_PATH, detect_types=db.PARSE_DECLTYPES)

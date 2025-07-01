@@ -10,6 +10,7 @@ from utils.functions import int_input
 from config.config import DATABASE_PATH
 
 
+# if habits length is less than 2 not display select option
 def user_input(param):
     "gets int input"
     print("Select an option")

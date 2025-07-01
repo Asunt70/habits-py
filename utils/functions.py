@@ -93,3 +93,18 @@ def get_cols():
     except db.Error as e:
         print(f"Database error: {e}")
         return None
+
+
+def get_record():
+    """gets today record returns a tuple"""
+    try:
+        with db.connect(
+            database=DATABASE_PATH, detect_types=db.PARSE_DECLTYPES
+        ) as conn:
+            cursor = conn.cursor()
+            today = datetime.date.today()
+            cursor.execute("SELECT * from habits WHERE date = ?", (today,))
+            return cursor.fetchall()
+    except db.Error as e:
+        print(f"Database Error: {e}")
+        return None
