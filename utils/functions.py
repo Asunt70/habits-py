@@ -1,6 +1,6 @@
 """global functions"""
 
-import sqlite3
+import sqlite3 as db
 import datetime
 from config.config import DATABASE_PATH
 
@@ -73,11 +73,11 @@ def multi_int_input(prompt):
 def get_habits():
     """get habits col from user_data table return a list"""
     try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
+        with db.connect(database=DATABASE_PATH) as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT habits FROM user_data")
             return cursor.fetchall()
-    except sqlite3.Error as e:
+    except db.Error as e:
         print(f"Database error: {e}")
         return []
 
@@ -85,54 +85,11 @@ def get_habits():
 def get_cols():
     """get cols from database returns a list"""
     try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
+        with db.connect(database=DATABASE_PATH) as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM habits")
             cols = [desc[0] for desc in cursor.description]
             return cols
-    except sqlite3.Error as e:
+    except db.Error as e:
         print(f"Database error: {e}")
-        return None
-
-
-# delete the today record
-def delete_record():
-    """delete the last record TESTING ONLY"""
-    try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
-            cursor = conn.cursor()
-            today = datetime.date.today()
-            cursor.execute("DELETE FROM habits WHERE date = ?;", (today,))
-            conn.commit()
-        print("deleted record succesfully")
-    except sqlite3.Error as e:
-        print(f"Database Error: {e}")
-
-
-# get the today record
-def get_record():
-    """gets today record returns a tuple"""
-    try:
-        with sqlite3.connect(
-            database=DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES
-        ) as conn:
-            cursor = conn.cursor()
-            today = datetime.date.today()
-            cursor.execute("SELECT * from habits WHERE date = ?", (today,))
-            return cursor.fetchall()
-    except sqlite3.Error as e:
-        print(f"Database Error: {e}")
-        return None
-
-
-# lab function
-def get_last_record():
-    """gets last record returns a tuple"""
-    try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT * FROM habits ORDER BY ID DESC LIMIT 1")
-            return cursor.fetchall()
-    except sqlite3.Error as e:
-        print(f"Database Erro: {e}")
         return None

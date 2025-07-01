@@ -1,6 +1,6 @@
 """adds a habit to habits column in user_data table"""
 
-import sqlite3
+import sqlite3 as db
 from utils.functions import yes_no_prompt, get_habits
 from config.config import DATABASE_PATH
 
@@ -16,7 +16,7 @@ def main(habit):
         add_habit = result[0] + (habit,)
         updated_response = ",".join(add_habit)
         try:
-            with sqlite3.connect(database=DATABASE_PATH) as conn:
+            with db.connect(database=DATABASE_PATH) as conn:
                 cursor = conn.cursor()
                 cursor.execute(
                     """
@@ -27,5 +27,5 @@ def main(habit):
                 )
                 conn.commit()
                 print(f"{habit} habit added successfully")
-        except sqlite3.Error as e:
+        except db.Error as e:
             print(f"Database error: {e}")

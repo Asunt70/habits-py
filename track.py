@@ -1,7 +1,7 @@
 """track habits"""
 
 # ALLOW FLOAT
-import sqlite3
+import sqlite3 as db
 import datetime
 import utils.date_adapter as date_adapter
 from utils.functions import float_input, get_habits, get_record
@@ -15,7 +15,7 @@ def get_cols():
     """get cols from database returns a list"""
     cols.clear()
     try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
+        with db.connect(database=DATABASE_PATH) as conn:
             cursor = conn.cursor()
             data = cursor.execute(
                 """
@@ -25,7 +25,7 @@ def get_cols():
             for column in data.description:
                 cols.append(column[0])
             return cols
-    except sqlite3.Error as e:
+    except db.Error as e:
         print(f"Database error: {e}")
         return None
 
@@ -40,12 +40,12 @@ def check_cols():
 
     if missing_columns:
         try:
-            with sqlite3.connect(database=DATABASE_PATH) as conn:
+            with db.connect(database=DATABASE_PATH) as conn:
                 cursor = conn.cursor()
                 for i in missing_columns:
                     cursor.execute(f"ALTER TABLE habits ADD COLUMN {i} REAL")
             # print("syncing cols.... DONE")
-        except sqlite3.Error as e:
+        except db.Error as e:
             print(f"DatabaseError: {e}")
 
 
@@ -60,7 +60,7 @@ def track():
         raw = float_input(f"insert data for {col}\n==>")
         data.append(raw)
     try:
-        with sqlite3.connect(database=DATABASE_PATH) as conn:
+        with db.connect(database=DATABASE_PATH) as conn:
             cursor = conn.cursor()
             data.insert(0, datetime.date.today())
             cursor.execute(
@@ -68,7 +68,7 @@ def track():
                 data,
             )
         print("habit(s) tracked successfully")
-    except sqlite3.Error as e:
+    except db.Error as e:
         print(f"Database error: {e}")
 
 
@@ -96,8 +96,8 @@ def main():
             for col in none_cols:
                 value = float_input(f"{col} is none please enter value for today\n==> ")
                 try:
-                    with sqlite3.connect(
-                        database=DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES
+                    with db.connect(
+                        database=DATABASE_PATH, detect_types=db.PARSE_DECLTYPES
                     ) as conn:
                         cursor = conn.cursor()
                         today = datetime.date.today()
@@ -107,7 +107,7 @@ def main():
                         )
                         conn.commit()
                     print(f"{col} UPDATED")
-                except sqlite3.Error as e:
+                except db.Error as e:
                     print(f"Database Error: {e}")
         else:
             print("everything's tracked")

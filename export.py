@@ -1,4 +1,5 @@
-# WARNING THIS IS AN EXAMPLE
+"""Export habits to a CSV file."""
+
 import sqlite3 as db
 import csv
 from config.config import DATABASE_PATH

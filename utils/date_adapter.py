@@ -1,17 +1,15 @@
 """date adapter for database"""
 
-import sqlite3
+import sqlite3 as db
 import datetime
 
 # Adapter for date/datetime → SQLite
-sqlite3.register_adapter(datetime.date, lambda d: d.isoformat())
-sqlite3.register_adapter(datetime.datetime, lambda dt: dt.isoformat())
+db.register_adapter(datetime.date, lambda d: d.isoformat())
+db.register_adapter(datetime.datetime, lambda dt: dt.isoformat())
 
 # Converter from SQLite → Python
-sqlite3.register_converter("date", lambda b: datetime.date.fromisoformat(b.decode()))
-sqlite3.register_converter(
-    "datetime", lambda b: datetime.datetime.fromisoformat(b.decode())
-)
+db.register_converter("date", lambda b: datetime.date.fromisoformat(b.decode()))
+db.register_converter("datetime", lambda b: datetime.datetime.fromisoformat(b.decode()))
 
 # Enable converters when connecting
-conn = sqlite3.connect("user/user_data.db", detect_types=sqlite3.PARSE_DECLTYPES)
+conn = db.connect("user/user_data.db", detect_types=db.PARSE_DECLTYPES)

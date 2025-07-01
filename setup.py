@@ -1,6 +1,6 @@
 """#todo"""
 
-import sqlite3
+import sqlite3 as db
 import json
 import os
 from utils.functions import yes_no_prompt, multi_int_input
@@ -20,7 +20,7 @@ def create_cheers():
     """create motivational messages for the user"""
     while True:
         ask_cheer = yes_no_prompt(
-            "Do you want to set motivational messages to cheer you while interacting with the app? (y/n)\n=> ",
+            "Do you want to set motivational messages to cheer you while interacting with the app? (y/n)\n=> "
         )
         if "y" in ask_cheer:
             get_cheers = str(
@@ -101,7 +101,7 @@ def main():
     user_habits_string = ",".join(user_habits)
 
     try:
-        with sqlite3.connect("user/user_data.db") as conn:
+        with db.connect("user/user_data.db") as conn:
             cursor = conn.cursor()
             cursor.executescript(
                 """
@@ -126,7 +126,7 @@ def main():
         )
         conn.commit()
 
-    except sqlite3.Error as e:
+    except db.Error as e:
         print(f"Database error: {e}")
 
     config = load_config()
