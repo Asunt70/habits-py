@@ -4,7 +4,7 @@
 DATABASE_PATH = "user/user_data.db"
 
 # Config
-CONFIG_PATH = "config/config.json"
+CONFIG_PATH = "habitpy/config/config.json"
 
 # user folder
 USER_FOLDER_PATH = "user/"

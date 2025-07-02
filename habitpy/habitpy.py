@@ -59,23 +59,25 @@ args = parser.parse_args()
 def main():
     """main function"""
     if not os.path.exists(CONFIG_PATH):
+        print("please run 'habitpy setup to use the app'")
         if args.command == "setup":
             setup()
-    if args.command == "track":
-        track_habits()
-    if args.command == "reset":
-        reset()
-    if args.command == "create":
-        create_habit(args.habit_name)
-    if args.command == "graph":
-        if args.data_format == "week":
-            week_data(args.week_option)
-        if args.data_format == "month":
-            month_data(args.month_name)
-        if args.data_format == "year":
-            year_data(args.year)
-    if args.command == "export":
-        export_habits()
+    if os.path.exists(CONFIG_PATH):
+        if args.command == "track":
+            track_habits()
+        if args.command == "reset":
+            reset()
+        if args.command == "create":
+            create_habit(args.habit_name)
+        if args.command == "graph":
+            if args.data_format == "week":
+                week_data(args.week_option)
+            if args.data_format == "month":
+                month_data(args.month_name)
+            if args.data_format == "year":
+                year_data(args.year)
+        if args.command == "export":
+            export_habits()
 
 
 if __name__ == "__main__":

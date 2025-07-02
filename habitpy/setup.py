@@ -9,6 +9,13 @@ from habitpy.config.config import CONFIG_PATH, USER_FOLDER_PATH
 
 def load_config():
     """loads config.json"""
+    if not os.path.exists(CONFIG_PATH):
+        with open(CONFIG_PATH, "w", encoding="utf-8") as config_file:
+            json.dump(
+                {"first_run": "true", "cheers": "false", "language": "en"},
+                config_file,
+                indent=4,
+            )
     with open(CONFIG_PATH, "r", encoding="utf-8") as config_file:
         return json.load(config_file)
 
@@ -94,14 +101,6 @@ def main():
     if not os.path.exists(USER_FOLDER_PATH):
         os.makedirs(USER_FOLDER_PATH)
 
-    if not os.path.exists(CONFIG_PATH):
-        with open(CONFIG_PATH, "w", encoding="utf-8") as config_file:
-            json.dump(
-                {"first_run": "true", "cheers": "false", "language": "en"},
-                config_file,
-                indent=4,
-            )
-
     user_name = str(input("How should i call you?\n=> "))
     user_cheers = create_cheers()
     if not user_cheers is None:
@@ -146,3 +145,4 @@ def main():
     config["first_run"] = "true"
     with open(CONFIG_PATH, "w", encoding="utf-8") as config_file:
         json.dump(config, config_file, indent=4)
+    print("setup completed run 'habitpy -h' to see all available commands!")
