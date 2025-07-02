@@ -24,12 +24,11 @@ for example in arch linux:
 sudo pacman -S python-pipx
 pipx ensurepath
 ```
-close your terminal and
+close your terminal and:
 ```bash
 pipx install habitpy==0.1.1
-``
-
-or, for development:
+```
+Or, for development:
 ```bash
 git clone https://github.com/Asunt70/habitpy.git
 cd habitpy
