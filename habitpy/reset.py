@@ -9,7 +9,7 @@ from habitpy.export import main as export_habits
 def main():
     """main function"""
     ask_reset = yes_no_prompt(
-        "Are you sure you want to reset Habitpy? (y/n)\nWARNING THIS WILL DELETE ALL YOUR DATA\nWE WILL GENERATE A COPY OF YOUR DATA AS A CSV FILE IN ....\n=> "
+        "Are you sure you want to reset Habitpy? (y/n)\nWARNING THIS WILL DELETE ALL YOUR DATA\n=> "
     )
     if "y" not in ask_reset:
         print("Reset cancelled.")

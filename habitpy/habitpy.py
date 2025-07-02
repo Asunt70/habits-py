@@ -78,6 +78,8 @@ def main():
                 year_data(args.year)
         if args.command == "export":
             export_habits()
+        if args.command == "setup":
+            print("you already setup the app if you wanna reset run 'habitpy reset'")
 
 
 if __name__ == "__main__":

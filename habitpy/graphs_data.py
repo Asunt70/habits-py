@@ -119,6 +119,7 @@ def week_data(last_or_current: str):
     """simple menu to see week graphs"""
     cols, response = load_week(last_or_current)
     if response == [] or response is None:
+        print("week is empty, no data will be shown")
         return None
     habits = cols[3:]
     habit_to_track = user_input(habits)
@@ -220,7 +221,7 @@ def month_data(month_to_get: str):
     formatted_month = dates.get(month_to_get)
     cols, response = load_month(formatted_month)
     if response is None or response == []:
-        print("no data for specified month")
+        print("month is empty, no data will be shown")
         return None
     habits = cols[2:]
     habit_to_track = user_input(habits)
@@ -293,7 +294,7 @@ def year_data(year: int):
     """returns data from the year"""
     cols, response = load_year(year)
     if response == [] or response is None:
-        print("there's no data in the database for this year")
+        print("year is empty, no data will be shown")
         return None
     habits = cols[2:]
     habit_to_track = user_input(habits)
