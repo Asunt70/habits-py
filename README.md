@@ -15,7 +15,9 @@
 - 🛠️ **Easy Reset:** Reset your data and start fresh anytime.
 
 ## Installation
-
+```bash
+pip install habitpy==0.1.1
+```
 ```bash
 pip install .
 ```
