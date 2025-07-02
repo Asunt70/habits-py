@@ -12,7 +12,7 @@ def load_config():
     if not os.path.exists(CONFIG_PATH):
         with open(CONFIG_PATH, "w", encoding="utf-8") as config_file:
             json.dump(
-                {"first_run": "true", "cheers": "false", "language": "en"},
+                {"first_run": "true", "cheers": "false"},
                 config_file,
                 indent=4,
             )
