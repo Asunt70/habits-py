@@ -14,7 +14,7 @@ def main():
     if "y" not in ask_reset:
         print("Reset cancelled.")
         return
-    export_habits()
+    export_habits(show=False)
     os.remove(DATABASE_PATH)
     os.rmdir("user")
     print("removed user folder")

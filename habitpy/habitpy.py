@@ -4,7 +4,7 @@ import argparse
 import os
 from habitpy.setup import main as setup
 from habitpy.track import main as track_habits
-from habitpy.create_habit import main as create_habit
+from habitpy.manage_habits import create_habit, delete_habit, show_habits
 from habitpy.graphs_data import month_data, year_data, week_data
 from habitpy.export import main as export_habits
 from habitpy.reset import main as reset
@@ -53,6 +53,10 @@ month_graph.add_argument(
 year_graph.add_argument("year", type=int, help="Select a year to graph")
 export_parser = subparsers.add_parser("export", help="Export habits to a CSV file")
 setup_parser = subparsers.add_parser("setup", help="Setup the habit tracker")
+show_parser = subparsers.add_parser("show", help="Show your habits")
+delete_parser = subparsers.add_parser("delete", help="Delete a habit")
+delete_parser.add_argument("habit_name", type=str, help="Name of the habit to delete")
+
 args = parser.parse_args()
 
 
@@ -77,9 +81,13 @@ def main():
             if args.data_format == "year":
                 year_data(args.year)
         if args.command == "export":
-            export_habits()
+            export_habits(show=True)
         if args.command == "setup":
             print("you already setup the app if you wanna reset run 'habitpy reset'")
+        if args.command == "show":
+            show_habits()
+        if args.command == "delete":
+            delete_habit(args.habit_name)
 
 
 if __name__ == "__main__":

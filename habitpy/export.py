@@ -31,10 +31,12 @@ def write_csv(cols, data):
             writer.writerow(row)
 
 
-def main():
+def main(show: bool):
     """Export habits to a CSV file."""
     cols, data = read_data()
     if data is None or data == []:
+        if show is True:
+            print("no data to export! please run 'habitpy track'")
         return
     if os.path.exists("habits_data.csv"):
         os.remove("habits_data.csv")

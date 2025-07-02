@@ -97,7 +97,9 @@ def main():
                 none_cols.append(cols[i])
             # update none records
             for col in none_cols:
-                value = float_input(f"{col} is none please enter value for today\n==> ")
+                value = float_input(
+                    f"{col} hasn't been tracked please enter today value\n==> "
+                )
                 try:
                     with db.connect(
                         database=DATABASE_PATH, detect_types=db.PARSE_DECLTYPES
