@@ -24,7 +24,7 @@ git clone https://github.com/Asunt70/habitpy.git
 cd habits-py
 pip install -e .
 ```
-or create virtual environment.
+or create a virtual environment.
 
 ## Usage
 
