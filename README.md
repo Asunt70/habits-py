@@ -18,15 +18,13 @@
 ```bash
 pip install habitpy==0.1.1
 ```
-```bash
-pip install .
-```
 or, for development:
 ```bash
 git clone https://github.com/Asunt70/habitpy.git
 cd habits-py
 pip install -e .
 ```
+or create virtual environment.
 
 ## Usage
 
