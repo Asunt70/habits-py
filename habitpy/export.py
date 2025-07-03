@@ -2,10 +2,8 @@
 
 import sqlite3 as db
 import csv
-import webbrowser
 import os
 from habitpy.config.config import DATABASE_PATH, EXPORT_PATH
-from habitpy.utils.functions import yes_no_prompt
 
 
 def read_data():
