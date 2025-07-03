@@ -15,7 +15,7 @@
 
 ## Installation
 ```bash
-pip install habitpy==0.1.11
+pip install habitpy==0.1.13
 ```
 If your system says some error about being globally installed try installing with *pipx*,
 for example in arch linux:
@@ -25,7 +25,7 @@ pipx ensurepath
 ```
 close your terminal and:
 ```bash
-pipx install habitpy==0.1.11
+pipx install habitpy==0.1.13
 ```
 Or, for development:
 ```bash
