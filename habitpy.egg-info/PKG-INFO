@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: habitpy
-Version: 0.1.12
+Version: 0.1.13
 Summary: Track your habits from the terminal
 Author-email: Sebastián Figueroa <sebaj348@gmail.com>
 License-Expression: MIT
@@ -27,7 +27,7 @@ Requires-Dist: platformdirs
 
 ## Installation
 ```bash
-pip install habitpy==0.1.11
+pip install habitpy==0.1.13
 ```
 If your system says some error about being globally installed try installing with *pipx*,
 for example in arch linux:
@@ -37,7 +37,7 @@ pipx ensurepath
 ```
 close your terminal and:
 ```bash
-pipx install habitpy==0.1.11
+pipx install habitpy==0.1.13
 ```
 Or, for development:
 ```bash
