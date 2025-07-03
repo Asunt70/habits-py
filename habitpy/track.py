@@ -111,7 +111,7 @@ def main():
                             (value, today),
                         )
                         conn.commit()
-                    print(f"{col} UPDATED")
+                    print(f"{col} updated")
                 except db.Error as e:
                     print(f"Database Error: {e}")
         else:

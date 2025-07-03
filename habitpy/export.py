@@ -4,7 +4,8 @@ import sqlite3 as db
 import csv
 import webbrowser
 import os
-from habitpy.config.config import DATABASE_PATH
+from habitpy.config.config import DATABASE_PATH, EXPORT_PATH
+from habitpy.utils.functions import yes_no_prompt
 
 
 def read_data():
@@ -23,7 +24,7 @@ def read_data():
 
 def write_csv(cols, data):
     """writes habits data into a csv file"""
-    with open("habits_data.csv", "w", newline="", encoding="utf-8") as f_handle:
+    with open(EXPORT_PATH, "w", newline="", encoding="utf-8") as f_handle:
         writer = csv.writer(f_handle)
         header = cols
         writer.writerow(header)
@@ -38,10 +39,9 @@ def main(show: bool):
         if show is True:
             print("no data to export! please run 'habitpy track'")
         return
-    if os.path.exists("habits_data.csv"):
-        os.remove("habits_data.csv")
+    if os.path.exists(EXPORT_PATH):
+        os.remove(EXPORT_PATH)
     write_csv(cols, data)
     print(
-        "your data has been exported to a csv file, save the file!\nopening browser..."
+        "your data has been exported into .local/share/habitpy/exported.csv, save the file!"
     )
-    webbrowser.open("habits_data.csv")

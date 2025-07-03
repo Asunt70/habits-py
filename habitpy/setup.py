@@ -4,7 +4,7 @@ import sqlite3 as db
 import json
 import os
 from habitpy.utils.functions import yes_no_prompt, multi_int_input
-from habitpy.config.config import CONFIG_PATH, USER_FOLDER_PATH
+from habitpy.config.config import CONFIG_PATH, DATABASE_PATH
 
 
 def load_config():
@@ -98,10 +98,6 @@ def choose_habits():
 
 def main():
     """main function"""
-    if not os.path.exists(USER_FOLDER_PATH):
-        os.makedirs(USER_FOLDER_PATH)
-
-    user_name = str(input("How should i call you?\n=> "))
     user_cheers = create_cheers()
     if not user_cheers is None:
         user_cheers = ",".join(user_cheers)
@@ -113,7 +109,7 @@ def main():
     user_habits_string = ",".join(user_habits)
 
     try:
-        with db.connect("user/user_data.db") as conn:
+        with db.connect(DATABASE_PATH) as conn:
             cursor = conn.cursor()
             cursor.executescript(
                 """
@@ -129,9 +125,8 @@ def main():
             """
             )
         cursor.execute(
-            "INSERT INTO user_data (name, cheers, habits) VALUES (?, ?, ?)",
+            "INSERT INTO user_data (cheers, habits) VALUES (?, ?)",
             (
-                user_name,
                 user_cheers,
                 user_habits_string,
             ),

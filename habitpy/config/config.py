@@ -1,13 +1,38 @@
 """Global variables"""
 
+from pathlib import Path
+
+
+def get_config_dir():
+    return Path.home() / ".config" / "habitpy"
+
+
+def get_data_dir():
+    return Path.home() / ".local" / "share" / "habitpy"
+
+
+def get_config_path():
+    config_dir = get_config_dir()
+    config_dir.mkdir(parents=True, exist_ok=True)
+    return config_dir / "config.json"
+
+
+def get_db_path():
+    data_dir = get_data_dir()
+    data_dir.mkdir(parents=True, exist_ok=True)
+    return data_dir / "user.db"
+
+
+def get_export_path():
+    data_dir = get_data_dir()
+    data_dir.mkdir(parents=True, exist_ok=True)
+    return data_dir / "exported.csv"
+
+
 # Database
-DATABASE_PATH = "user/user_data.db"
+DATABASE_PATH = get_db_path()
 
 # Config
-CONFIG_PATH = "habitpy/config/config.json"
+CONFIG_PATH = get_config_path()
 
-# user folder
-USER_FOLDER_PATH = "user/"
-
-# metadata
-METADATA_PATH = "metadata.json"
+EXPORT_PATH = get_export_path()
