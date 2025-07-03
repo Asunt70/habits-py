@@ -1,14 +1,15 @@
 """Global variables"""
 
+from platformdirs import user_config_dir, user_data_dir
 from pathlib import Path
 
 
 def get_config_dir():
-    return Path.home() / ".config" / "habitpy"
+    return Path(user_config_dir("habitpy"))
 
 
 def get_data_dir():
-    return Path.home() / ".local" / "share" / "habitpy"
+    return Path(user_data_dir("habitpy"))
 
 
 def get_config_path():

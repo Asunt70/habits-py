@@ -40,6 +40,4 @@ def main(show: bool):
     if os.path.exists(EXPORT_PATH):
         os.remove(EXPORT_PATH)
     write_csv(cols, data)
-    print(
-        "your data has been exported into .local/share/habitpy/exported.csv, save the file!"
-    )
+    print(f"your data has been exported into {EXPORT_PATH}, save the file!")

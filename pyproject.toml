@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "habitpy"
-version = "0.1.11"
+version = "0.1.12"
 description = "Track your habits from the terminal"
 readme = "README.md"
 license = "MIT"
@@ -12,7 +12,8 @@ authors = [{ name = "Sebastián Figueroa", email= "sebaj348@gmail.com" }]
 requires-python= ">=3.11"
 dependencies = [
     "pandas",
-    "plotly"
+    "plotly",
+    "platformdirs"
 ]
 [projects.url]
 Repository = "https://github.com/Asunt70/habitpy"

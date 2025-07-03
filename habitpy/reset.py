@@ -16,7 +16,6 @@ def main():
         return
     export_habits(show=False)
     os.remove(DATABASE_PATH)
-    os.rmdir("user")
     print("removed user folder")
     os.remove(CONFIG_PATH)
     print("removed config.json")

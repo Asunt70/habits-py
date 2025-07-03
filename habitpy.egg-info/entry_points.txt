@@ -1,0 +1,2 @@
+[console_scripts]
+habitpy = habitpy.habitpy:main
