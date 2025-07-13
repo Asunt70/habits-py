@@ -1,3 +1,7 @@
+Here’s your updated README with clear steps for creating a `.venv`, installing dependencies, and then building the project. I kept the tone tight and dev-friendly:
+
+---
+
 # HabitPy
 
 **Track your habits, analyze your progress, and stay motivated—all from your terminal!**
@@ -11,16 +15,34 @@
 - 📤 **Export Data:** Export all your habit data to CSV for use in Excel, Sheets, or anywhere else.
 - 🛠️ **Easy Reset:** Reset your data and start fresh anytime.
 
+---
+
 ## Installation
 
-### Option 1: Build and Install from Source (Recommended)
+### 🔧 Prerequisites
 
-#### Clone and Build
+Before building or running HabitPy, create a virtual environment and install dependencies:
 
 ```bash
+# Clone the repo
 git clone https://github.com/asuntx/habitpy.git
 cd habitpy
 
+# Create and activate virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install .
+```
+
+---
+
+### 🚀 Option 1: Build and Install from Source (Recommended)
+
+note: \* is the version and name it might change so just copy the name of the whl file
+
+```bash
 # Build the distribution
 python -m build
 
@@ -28,12 +50,11 @@ python -m build
 pip install dist/habitpy-*.whl
 ```
 
-#### Using pipx (Recommended for CLI tools)
+---
+
+### ⚡ Option 2: Use pipx (Recommended for CLI tools)
 
 ```bash
-git clone https://github.com/asuntx/habitpy.git
-cd habitpy
-
 # Build the distribution
 python -m build
 
@@ -41,57 +62,33 @@ python -m build
 pipx install dist/habitpy-*.whl
 ```
 
-#### Using uv (Fast Python package installer)
+---
+
+### 🧪 Option 3: Development Installation
+
+#### With pip (editable mode)
 
 ```bash
-git clone https://github.com/asuntx/habitpy.git
-cd habitpy
-
-# Build the distribution
-python -m build
-
-# Install with uv
-uv pip install dist/habitpy-*.whl
-```
-
-### Option 2: Development Installation
-
-#### Using pip
-
-```bash
-git clone https://github.com/asuntx/habitpy.git
-cd habitpy
-
-# Create virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Install in development mode
+# Already inside .venv
 pip install -e .
 ```
 
-#### Using uv for Development
+#### With uv
 
 ```bash
-git clone https://github.com/asuntx/habitpy.git
-cd habitpy
-
-# Install with uv
 uv sync
 uv run habitpy setup
 ```
 
-#### Using pipx for Development
+#### With pipx (editable mode)
 
 ```bash
-git clone https://github.com/asuntx/habitpy.git
-cd habitpy
-
-# Install in development mode with pipx
 pipx install -e .
 ```
 
-## Usage
+---
+
+## 🕹️ Usage
 
 First, set up your tracker:
 
@@ -99,16 +96,20 @@ First, set up your tracker:
 habitpy setup
 ```
 
-Then, use these commands:
+Then, use the commands:
 
-- `habitpy track` — Log today's habits
+- `habitpy track <habit_name[optional]>` — Log today’s habits
 - `habitpy create <habit_name>` — Add a new habit
-- `habitpy show` — List your habits
+- `habitpy show` — List all habits
 - `habitpy delete <habit_name>` — Remove a habit
-- `habitpy graph week|month|year` — See your progress in graphs
-- `habitpy export` — Export your data to CSV
+- `habitpy graph week|month|year` — Visualize progress
+- `habitpy export` — Export data to CSV
 - `habitpy reset` — Delete all data and start over
 
 ---
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W318WNN8)
+
+---
+
+Let me know if you also want a `Makefile`, `.env.example`, or add badges for PyPI/release status.
