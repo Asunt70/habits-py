@@ -1,5 +1,3 @@
----
-
 # HabitPy
 
 **Track your habits, analyze your progress, and stay motivated—all from your terminal!**
