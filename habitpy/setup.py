@@ -1,10 +1,11 @@
 """setup"""
 
-import sqlite3 as db
 import json
 import os
-from habitpy.utils.functions import yes_no_prompt, multi_int_input
+import sqlite3 as db
+
 from habitpy.config.config import CONFIG_PATH, DATABASE_PATH
+from habitpy.utils.functions import multi_int_input, yes_no_prompt
 
 
 def load_config():
@@ -99,7 +100,7 @@ def choose_habits():
 def main():
     """main function"""
     user_cheers = create_cheers()
-    if not user_cheers is None:
+    if user_cheers is not None:
         user_cheers = ",".join(user_cheers)
         config = load_config()
         config["cheers"] = "true"
