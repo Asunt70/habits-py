@@ -12,37 +12,96 @@
 - 🛠️ **Easy Reset:** Reset your data and start fresh anytime.
 
 ## Installation
+
+### Option 1: Build and Install from Source (Recommended)
+
+#### Clone and Build
+
 ```bash
-pip install habitpy==0.1.13
-```
-If your system says some error about being globally installed try installing with *pipx*,
-for example in arch linux:
-```bash
-sudo pacman -S python-pipx
-pipx ensurepath
-```
-close your terminal and:
-```bash
-pipx install habitpy==0.1.13
-```
-Or, for development:
-```bash
-git clone https://github.com/Asunt70/habitpy.git
+git clone https://github.com/asuntx/habitpy.git
 cd habitpy
-python -m venv .venv/
-source .venv/bin/activate
-pip install .
+
+# Build the distribution
+python -m build
+
+# Install the built package globally
+pip install dist/habitpy-*.whl
+```
+
+#### Using pipx (Recommended for CLI tools)
+
+```bash
+git clone https://github.com/asuntx/habitpy.git
+cd habitpy
+
+# Build the distribution
+python -m build
+
+# Install with pipx (ensures global availability)
+pipx install dist/habitpy-*.whl
+```
+
+#### Using uv (Fast Python package installer)
+
+```bash
+git clone https://github.com/asuntx/habitpy.git
+cd habitpy
+
+# Build the distribution
+python -m build
+
+# Install with uv
+uv pip install dist/habitpy-*.whl
+```
+
+### Option 2: Development Installation
+
+#### Using pip
+
+```bash
+git clone https://github.com/asuntx/habitpy.git
+cd habitpy
+
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install in development mode
+pip install -e .
+```
+
+#### Using uv for Development
+
+```bash
+git clone https://github.com/asuntx/habitpy.git
+cd habitpy
+
+# Install with uv
+uv sync
+uv run habitpy setup
+```
+
+#### Using pipx for Development
+
+```bash
+git clone https://github.com/asuntx/habitpy.git
+cd habitpy
+
+# Install in development mode with pipx
+pipx install -e .
 ```
 
 ## Usage
 
 First, set up your tracker:
+
 ```bash
 habitpy setup
 ```
 
 Then, use these commands:
-- `habitpy track` — Log today’s habits
+
+- `habitpy track` — Log today's habits
 - `habitpy create <habit_name>` — Add a new habit
 - `habitpy show` — List your habits
 - `habitpy delete <habit_name>` — Remove a habit
