@@ -1,8 +1,10 @@
 """adds a habit to habits column in user_data table"""
 
 import sqlite3 as db
-from habitpy.utils.functions import yes_no_prompt, get_habits
+from typing import List
+
 from habitpy.config.config import DATABASE_PATH
+from habitpy.utils.functions import get_habits, yes_no_prompt
 
 
 def create_habit(habit):
@@ -26,7 +28,7 @@ def create_habit(habit):
                     (updated_response,),
                 )
                 conn.commit()
-                print(f"{habit} habit added")
+                print(f"{habit} habit created")
         except db.Error as e:
             print(f"Database error: {e}")
 
@@ -41,7 +43,9 @@ def delete_habit(habit: str):
         print(f"{habit} doesn't exist try with another")
         return
     if len(result[0][0].split(",")) == 1:
-        print(f"you can't leave no habits please create another to delete '{habit}'")
+        print(
+            f"you can't leave no habits please create another one to delete '{habit}'"
+        )
         return
     confirm_habit = yes_no_prompt(f"are you sure to delete {habit}? (y/n)\n=> ")
     if "y" in confirm_habit:
@@ -55,7 +59,11 @@ def delete_habit(habit: str):
                 conn.commit()
         except db.Error as e:
             print(f"Database error: {e}")
+
         habits_columns = columns_names()
+        if not habits_columns:
+            print("you haven't setup the app please run: habitpy setup")
+            return
         if habit in habits_columns:
             try:
                 with db.connect(database=DATABASE_PATH) as conn:
@@ -79,7 +87,7 @@ def show_habits():
         print(f"{i}. {col}")
 
 
-def columns_names():
+def columns_names() -> List[str] | None:
     """loads all the columns names from habits table"""
     try:
         with db.connect(database=DATABASE_PATH) as conn:

@@ -1,11 +1,13 @@
 """global functions"""
 
-import sqlite3 as db
 import datetime
+import sqlite3 as db
+from typing import List
+
 from habitpy.config.config import DATABASE_PATH
 
 
-def yes_no_prompt(prompt):
+def yes_no_prompt(prompt) -> str:
     """A (y/n) input, only accepts y/n"""
     while True:
         user_input = input(prompt).strip().lower()
@@ -14,7 +16,7 @@ def yes_no_prompt(prompt):
         print("please enter 'y' for yes or 'n' for no")
 
 
-def float_input(prompt, stop: float | None = None):
+def float_input(prompt, stop: int | None = None) -> float:
     """A float input, only accepts floats"""
     while True:
         try:
@@ -27,7 +29,7 @@ def float_input(prompt, stop: float | None = None):
             print("please enter a number")
 
 
-def int_input(prompt, stop: int | None = None):
+def int_input(prompt, stop: int | None = None) -> int:
     """An int input, only accepts integers"""
     while True:
         try:
@@ -95,7 +97,7 @@ def get_cols():
         return None
 
 
-def get_record():
+def get_record() -> List[tuple[int]] | None:
     """gets today record returns a tuple"""
     try:
         with db.connect(

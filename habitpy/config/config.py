@@ -1,7 +1,8 @@
 """Global variables"""
 
-from platformdirs import user_config_dir, user_data_dir
 from pathlib import Path
+
+from platformdirs import user_config_dir, user_data_dir
 
 
 def get_config_dir():

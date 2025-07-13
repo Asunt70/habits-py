@@ -1,13 +1,13 @@
 """track habits"""
 
 # ALLOW FLOAT
-import sqlite3 as db
 import datetime
-import habitpy.utils.date_adapter as date_adapter
-from habitpy.utils.functions import float_input, get_habits, get_record
-from habitpy.utils.cheers import main as cheers
-from habitpy.config.config import DATABASE_PATH
+import sqlite3 as db
 
+import habitpy.utils.date_adapter as date_adapter
+from habitpy.config.config import DATABASE_PATH
+from habitpy.utils.cheers import main as cheers
+from habitpy.utils.functions import float_input, get_habits, get_record
 
 cols = []
 
@@ -59,7 +59,7 @@ def track():
     columns = "date," + columns
     data = []
     for col in cols:
-        raw = float_input(f"insert data for {col}\n==>")
+        raw = float_input(f"enter value for {col}\n==>")
         data.append(raw)
     try:
         with db.connect(database=DATABASE_PATH) as conn:
@@ -69,9 +69,40 @@ def track():
                 f"INSERT INTO habits ({columns}) VALUES ({', '.join(['?' for _ in data])})",
                 data,
             )
-        print("habit(s) tracked successfully")
+        print("habits tracked :)")
     except db.Error as e:
         print(f"Database error: {e}")
+
+
+def get_habit(habit: str):
+    try:
+        with db.connect(database=DATABASE_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT {habit} from habits ORDER BY id DESC LIMIT 1")
+            return cursor.fetchall()
+    except db.Error as e:
+        print(f"Database error {e}")
+        return None
+
+
+def track_habit(habit: str):
+    cheers()
+    check_cols()
+    result = get_habit(habit)
+    if result:
+        print(f"you already tracked {habit}!")
+        return
+    push = float_input(f"enter value for {habit}:\n=> ")
+    try:
+        with db.connect(database=DATABASE_PATH) as conn:
+            cursor = conn.cursor()
+            today = datetime.date.today()
+            cursor.execute(
+                f"INSERT INTO habits (date,{habit}) VALUES(?,?)", (today, push)
+            )
+        print(f"{habit} tracked :)")
+    except db.Error as e:
+        print(f"Database error {e}")
 
 
 def main():
@@ -79,6 +110,7 @@ def main():
     cheers()
     check_cols()
     record = get_record()
+    print(record)
     if record is None or record == []:
         track()
     # there are items in today track

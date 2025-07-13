@@ -2,19 +2,24 @@
 
 import argparse
 import os
+
+from habitpy.config.config import CONFIG_PATH
+from habitpy.export import main as export_habits
+from habitpy.graphs_data import month_data, week_data, year_data
+from habitpy.manage_habits import create_habit, delete_habit, show_habits
+from habitpy.reset import main as reset
 from habitpy.setup import main as setup
 from habitpy.track import main as track_habits
-from habitpy.manage_habits import create_habit, delete_habit, show_habits
-from habitpy.graphs_data import month_data, year_data, week_data
-from habitpy.export import main as export_habits
-from habitpy.reset import main as reset
-from habitpy.config.config import CONFIG_PATH
+from habitpy.track import track_habit
 
 parser = argparse.ArgumentParser(description="Habit Tracker CLI")
 subparsers = parser.add_subparsers(dest="command")
 create_parser = subparsers.add_parser("create", help="Create a new habit")
 create_parser.add_argument("habit_name", type=str, help="Name of the habit to create")
 track_parser = subparsers.add_parser("track", help="Track habits")
+track_parser.add_argument(
+    "habit_name", type=str, help="Name of the habit to track", nargs="?"
+)
 reset_parser = subparsers.add_parser(
     "reset", help="Resets the habit tracker, WARNING: All data will be lost"
 )
@@ -68,7 +73,10 @@ def main():
             setup()
     if os.path.exists(CONFIG_PATH):
         if args.command == "track":
-            track_habits()
+            if args.habit_name:
+                track_habit(args.habit_name)
+            else:
+                track_habits()
         if args.command == "reset":
             reset()
         if args.command == "create":

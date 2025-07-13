@@ -1,8 +1,9 @@
 """Export habits to a CSV file."""
 
-import sqlite3 as db
 import csv
 import os
+import sqlite3 as db
+
 from habitpy.config.config import DATABASE_PATH, EXPORT_PATH
 
 
